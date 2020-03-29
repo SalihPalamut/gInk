@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace gInk
@@ -22,7 +28,7 @@ namespace gInk
 
 		Label[] lbHotkeyPens = new Label[10];
 		HotkeyInputBox[] hiPens = new HotkeyInputBox[10];
-
+		private bool settingsLoaded = false;
 		public FormOptions(Root root)
 		{
 			Root = root;
@@ -392,12 +398,220 @@ namespace gInk
 		{
 			Root.AllowDraggingToolbar = cbAllowDragging.Checked;
 		}
+		public static bool Is64Bit()
+		{
 
+			return IntPtr.Size == 8 || (IntPtr.Size == 4 && Is32BitProcessOn64BitProcessor());
+		}
+
+		private static bool Is32BitProcessOn64BitProcessor()
+		{
+			bool retVal;
+			IsWow64Process(Process.GetCurrentProcess().Handle, out retVal);
+			return retVal;
+		}
+		string gInk_path;
+		private void btnDownload_Click(object sender, EventArgs e)
+		{
+			work.RunWorkerAsync();
+		}
+		string DownloadLocation = Path.GetTempPath() + "ffmpeg.zip";
+		private void ThrowEvent(EventHandler eventHandler)
+		{
+			work.ReportProgress(0, eventHandler);
+		}
+		private void Download(object sender, DoWorkEventArgs e)
+		{
+			
+			string url = string.Format("https://ffmpeg.zeranoe.com/builds/{0}/static/ffmpeg-latest-{0}-static.zip", system_type);
+			try
+			{
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+				request.UserAgent = "gInk";
+				
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+				{
+					long FileSize = response.ContentLength;
+					long DownloadedSize = 0;
+					int bytesRead = 0;
+					if (FileSize > 0)
+					{
+						work.ReportProgress(-1, FileSize);
+						byte[] buffer = new byte[(int)Math.Min(10240, FileSize)];
+						using (FileStream fs = new FileStream(DownloadLocation, FileMode.Create, FileAccess.Write, FileShare.Read))
+						using (Stream responseStream = response.GetResponseStream())
+						{
+							while (DownloadedSize < FileSize)
+							{
+								bytesRead = responseStream.Read(buffer, 0, buffer.Length);
+								fs.Write(buffer, 0, bytesRead);
+								DownloadedSize += bytesRead;
+								work.ReportProgress(bytesRead);
+							}
+							fs.Close();
+						}
+					}
+				}
+			}
+			catch (Exception el)
+			{
+				MessageBox.Show("Error", "Not Downloading" + el);
+			}
+		}
 		private void cbAllowHotkeyInPointer_CheckedChanged(object sender, EventArgs e)
 		{
 			Root.AllowHotkeyInPointerMode = cbAllowHotkeyInPointer.Checked;
 		}
+		BackgroundWorker work;
+		ProgressBar progressBar1;
+		string system_type,TempPath;
+		private string logo;
+		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (tabControl1.SelectedTab == tabControl1.TabPages["Record"])//your specific tabname
+			{
+				//Environment.SpecialFolder.MyVideos
+				TempPath = Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName;
+				gInk_path = TempPath+@"\Local\gInk";
+				if (!Directory.Exists(gInk_path))
+					Directory.CreateDirectory(gInk_path);
+				if (File.Exists(gInk_path + @"\ffmpeg.exe"))
+					btnDownload.Visible = false;
+				ffmpeg_path.Text = gInk_path + @"\ffmpeg.exe";
+				if (btnDownload.Visible)
+				{
+					system_type = (Is64Bit() ? "win64" : "win32");
+					work = new BackgroundWorker();
+					work.WorkerReportsProgress = true;
+					work.DoWork += Download;
+					work.ProgressChanged += worker_ProgressChanged;
+					work.RunWorkerCompleted += worker_RunWorkerCompleted;
+					progressBar1 = new ProgressBar();
+					progressBar1.Dock = DockStyle.Fill;
+					gbFFmpegExe.Controls.Add(progressBar1);
+				}
 
+				 logo = Path.Combine(gInk_path, "Logo.png");
+				if (File.Exists(logo))
+					watermark_show.Image = new Bitmap(logo);
+				//read settings
+				//settingsLoaded=true;
+				/*watermark_use.Checked = Options.FFmpeg.WaterMarkUse;
+				watermark_X.Value = Options.FFmpeg.WaterMark_X;
+				watermark_Y.Value = Options.FFmpeg.WaterMark_Y;
+				watermark_location_top.Checked = Options.FFmpeg.WaterMark_location_Top;
+				watermark_location_bottom.Checked = !watermark_location_top.Checked;
+				watermark_location_left.Checked = Options.FFmpeg.WaterMark_location_Left;
+				watermark_location_right.Checked = !Options.FFmpeg.WaterMark_location_Left;
+				watermark_opacity.Value = Options.FFmpeg.WaterMark_Opacity;
+				watermark_opacity_text.Text = "%" + watermark_opacity.Value;*/
+				///Read Devices
+				btnRefreshSources_Click( sender,  e);
+			}
+		}
+		private void watermark_chose_MouseClick(object sender, MouseEventArgs e)
+		{
+			OpenFileDialog Fl = new OpenFileDialog();
+			Fl.Filter = "Image Files(*.png)|*.png";
+			Fl.FileName = "Logo.png";
+			Fl.Title = "Chose Watermark";
+			Fl.DefaultExt = ".png";
+			if (Fl.ShowDialog() == DialogResult.OK)
+			{
+				if (watermark_show.Image != null)
+					watermark_show.Image.Dispose();
+
+				File.Copy(Fl.FileName, logo, true);
+				watermark_show.Image = new Bitmap(logo);
+			}
+		}
+
+		private void watermark_location_CheckedChanged(object sender, EventArgs e)
+		{
+			if (settingsLoaded)
+			{
+				/*Options.FFmpeg.WaterMark_location_Top = watermark_location_top.Checked;
+				Options.FFmpeg.WaterMark_location_Left = watermark_location_left.Checked;
+				Options.FFmpeg.WaterMark_X = (int)watermark_X.Value;
+				Options.FFmpeg.WaterMark_Y = (int)watermark_Y.Value;
+							
+			Options.FFmpeg.WaterMark_Opacity = watermark_opacity.Value;
+				UpdateUI();*/
+			}
+			watermark_opacity_text.Text = "%" + watermark_opacity.Value;
+		}
+
+		private void watermark_use_CheckedChanged(object sender, EventArgs e)
+		{
+			watermark_show.Enabled = watermark_use.Checked;
+			groupBox1.Enabled = watermark_use.Checked;
+			groupBox2.Enabled = watermark_use.Checked;
+			groupBox3.Enabled = watermark_use.Checked;
+			//Options.FFmpeg.WaterMarkUse = watermark_use.Checked;
+
+			//UpdateUI();
+		}
+
+		
+		private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		{
+			if (e.ProgressPercentage == -1)
+				progressBar1.Maximum = Convert.ToInt32(e.UserState);
+			else
+				progressBar1.Value += e.ProgressPercentage;
+		}
+
+		private void Record_Click(object sender, EventArgs e)
+		{
+
+		}
+		
+	
+			private void btnTest_Click(object sender, EventArgs e)
+		{
+			FFmpeg a = new FFmpeg();
+			if (txtCommandLinePreview.TextLength > 0)
+			a.test_commands(txtCommandLinePreview.Text);
+		}
+
+		private void btnRefreshSources_Click(object sender, EventArgs e)
+		{
+			btnRefreshSources.Enabled = false;
+			FFmpeg a = new FFmpeg();
+			
+			
+			DirectShowDevices devs = a.GetDirectShowDevices();
+			cboVideoSource.Items.Clear();
+			cboVideoSource.Items.Add("None");
+			cboVideoSource.Items.Add("GDI grab");
+			cboAudioSource.Items.Clear();
+			cboAudioSource.Items.Add("None");
+			if (devs != null)
+			{
+				cboVideoSource.Items.AddRange(devs.VideoDevices.ToArray());
+				cboAudioSource.Items.AddRange(devs.AudioDevices.ToArray());
+
+			}
+			btnRefreshSources.Enabled = true;
+		}
+
+		private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			try
+			{
+				ZipFile.ExtractToDirectory(DownloadLocation, Path.GetTempPath());
+			}
+			catch { }
+			try
+			{
+			string copy_location = Path.GetTempPath() + string.Format(@"ffmpeg-latest-{0}-static\bin\", system_type);
+			File.Copy(copy_location+ "ffplay.exe", ffmpeg_path.Text);
+			File.Copy(copy_location+ "ffmpeg.exe", ffmpeg_path.Text);
+			}
+			catch { }
+			gbFFmpegExe.Controls.Remove(progressBar1);
+			work.Dispose();
+		}
 		private void hi_OnHotkeyChanged(object sender, EventArgs e)
 		{
 			foreach (Control c in tabPage3.Controls)
@@ -432,5 +646,9 @@ namespace gInk
 				FormOptions_LocalReload();
 			}
 		}
+		[DllImport("kernel32.dll", CallingConvention = CallingConvention.Winapi)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool IsWow64Process([In] IntPtr hProcess, [Out] out bool lpSystemInfo);
 	}
+
 }

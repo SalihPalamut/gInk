@@ -1,7 +1,7 @@
 build
 release
 bin/crash.txt
-
+bin
 *.pdb
 *.exp
 *.sdf
@@ -9,3 +9,4 @@ bin/crash.txt
 *.opensdf
 *.lnk
 *vshost.exe*
+.vs
