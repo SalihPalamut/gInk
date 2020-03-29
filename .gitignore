@@ -2,6 +2,7 @@ build
 release
 bin/crash.txt
 bin
+packages
 *.pdb
 *.exp
 *.sdf

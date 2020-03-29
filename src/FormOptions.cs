@@ -37,6 +37,8 @@ namespace gInk
 
 		private void FormOptions_Load(object sender, EventArgs e)
 		{
+		
+			
 			Root.UnsetHotkey();
 
 			if (Root.EraserEnabled)
@@ -293,6 +295,9 @@ namespace gInk
 			Root.SaveOptions("pens.ini");
 			Root.SaveOptions("config.ini");
 			Root.SaveOptions("hotkeys.ini");
+
+		    Options.save();
+
 		}
 
 		private void cbWidthEnabled_CheckedChanged(object sender, EventArgs e)
@@ -466,6 +471,7 @@ namespace gInk
 		ProgressBar progressBar1;
 		string system_type,TempPath;
 		private string logo;
+		FFmpegOptions Options;
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (tabControl1.SelectedTab == tabControl1.TabPages["Record"])//your specific tabname
@@ -495,18 +501,19 @@ namespace gInk
 				if (File.Exists(logo))
 					watermark_show.Image = new Bitmap(logo);
 				//read settings
-				//settingsLoaded=true;
-				/*watermark_use.Checked = Options.FFmpeg.WaterMarkUse;
-				watermark_X.Value = Options.FFmpeg.WaterMark_X;
-				watermark_Y.Value = Options.FFmpeg.WaterMark_Y;
-				watermark_location_top.Checked = Options.FFmpeg.WaterMark_location_Top;
+				settingsLoaded=false;
+				Options = new FFmpegOptions();
+				
+				watermark_use.Checked = Options.WaterMarkUse;
+				watermark_X.Value = Options.WaterMark_X;
+				watermark_Y.Value = Options.WaterMark_Y;
+				watermark_location_top.Checked = Options.WaterMark_location_Top;
 				watermark_location_bottom.Checked = !watermark_location_top.Checked;
-				watermark_location_left.Checked = Options.FFmpeg.WaterMark_location_Left;
-				watermark_location_right.Checked = !Options.FFmpeg.WaterMark_location_Left;
-				watermark_opacity.Value = Options.FFmpeg.WaterMark_Opacity;
-				watermark_opacity_text.Text = "%" + watermark_opacity.Value;*/
-				///Read Devices
-				btnRefreshSources_Click( sender,  e);
+				watermark_location_left.Checked = Options.WaterMark_location_Left;
+				watermark_location_right.Checked = !Options.WaterMark_location_Left;
+				watermark_opacity.Value = Options.WaterMark_Opacity;
+				watermark_opacity_text.Text = "%" + watermark_opacity.Value;
+				settingsLoaded = true;
 			}
 		}
 		private void watermark_chose_MouseClick(object sender, MouseEventArgs e)
@@ -525,18 +532,21 @@ namespace gInk
 				watermark_show.Image = new Bitmap(logo);
 			}
 		}
-
+		private void UpdateUI()
+		{
+			txtCommandLinePreview.Text = Options.GetFFmpegArgs();
+		}
 		private void watermark_location_CheckedChanged(object sender, EventArgs e)
 		{
 			if (settingsLoaded)
 			{
-				/*Options.FFmpeg.WaterMark_location_Top = watermark_location_top.Checked;
-				Options.FFmpeg.WaterMark_location_Left = watermark_location_left.Checked;
-				Options.FFmpeg.WaterMark_X = (int)watermark_X.Value;
-				Options.FFmpeg.WaterMark_Y = (int)watermark_Y.Value;
+				Options.WaterMark_location_Top = watermark_location_top.Checked;
+				Options.WaterMark_location_Left = watermark_location_left.Checked;
+				Options.WaterMark_X = (int)watermark_X.Value;
+				Options.WaterMark_Y = (int)watermark_Y.Value;
 							
-			Options.FFmpeg.WaterMark_Opacity = watermark_opacity.Value;
-				UpdateUI();*/
+			Options.WaterMark_Opacity = watermark_opacity.Value;
+				UpdateUI();
 			}
 			watermark_opacity_text.Text = "%" + watermark_opacity.Value;
 		}
@@ -547,9 +557,8 @@ namespace gInk
 			groupBox1.Enabled = watermark_use.Checked;
 			groupBox2.Enabled = watermark_use.Checked;
 			groupBox3.Enabled = watermark_use.Checked;
-			//Options.FFmpeg.WaterMarkUse = watermark_use.Checked;
-
-			//UpdateUI();
+			Options.WaterMarkUse = watermark_use.Checked;
+			UpdateUI();
 		}
 
 		
@@ -593,6 +602,16 @@ namespace gInk
 
 			}
 			btnRefreshSources.Enabled = true;
+		}
+
+		private void txtCommandLinePreview_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void cboVideoSource_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			
 		}
 
 		private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
