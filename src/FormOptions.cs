@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,6 +16,7 @@ using System.Windows.Forms;
 
 namespace gInk
 {
+	
 	public partial class FormOptions : Form
 	{
 		public Root Root;
@@ -37,7 +39,6 @@ namespace gInk
 
 		private void FormOptions_Load(object sender, EventArgs e)
 		{
-		
 			
 			Root.UnsetHotkey();
 
@@ -173,6 +174,7 @@ namespace gInk
 			hiClear.Hotkey = Root.Hotkey_Clear;
 
 			FormOptions_LocalReload();
+		
 		}
 
 		private void FormOptions_LocalReload()
@@ -472,6 +474,89 @@ namespace gInk
 		string system_type,TempPath;
 		private string logo;
 		FFmpegOptions Options;
+		
+		private void load_ffmpeg_settings()
+		{
+			settingsLoaded = false;
+
+			btnRefreshSources.PerformClick();
+			cboVideoCodec.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegVideoCodec>());
+			cboAudioCodec.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegAudioCodec>());
+			cbx264Preset.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegPreset>());
+			cbGIFStatsMode.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegPaletteGenStatsMode>());
+			cbNVENCPreset.Items.AddRange(EnumExtensions.GetEnums<FFmpegNVENCPreset>().Select(x => $"{x} ({x.GetDescription()})").ToArray());
+			cbGIFDither.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegPaletteUseDither>());
+			cbAMFUsage.Items.AddRange(EnumExtensions.GetEnums<FFmpegAMFUsage>().Select(x => $"{x} ({x.GetDescription()})").ToArray());
+			cbAMFQuality.Items.AddRange(EnumExtensions.GetEnums<FFmpegAMFQuality>().Select(x => $"{x} ({x.GetDescription()})").ToArray());
+			cbQSVPreset.Items.AddRange(EnumExtensions.GetEnumDescriptions<FFmpegQSVPreset>());
+
+			Options = new FFmpegOptions();
+
+
+	
+
+			cboVideoSource.SelectedIndex = cboVideoSource.Items.IndexOf(Options.VideoSource);
+
+			
+				cboAudioSource.SelectedIndex = cboAudioSource.Items.IndexOf(Options.AudioSource);
+
+
+
+			cboVideoCodec.SelectedIndex = (int)Options.VideoCodec;
+			cboAudioCodec.SelectedIndex = (int)Options.AudioCodec;
+
+			tbUserArgs.Text = Options.UserArgs;
+
+			// x264
+			nudx264CRF.Value=(Options.x264_CRF);
+			cbx264Preset.SelectedIndex = (int)Options.x264_Preset;
+
+			// VPx
+			nudVP8Bitrate.Value=(Options.VPx_bitrate);
+
+			// Xvid
+			nudXvidQscale.Value=(Options.XviD_qscale);
+
+			// NVENC
+			nudNVENCBitrate.Value=(Options.NVENC_bitrate);
+			cbNVENCPreset.SelectedIndex = (int)Options.NVENC_preset;
+
+			// GIF
+			cbGIFStatsMode.SelectedIndex = (int)Options.GIFStatsMode;
+			cbGIFDither.SelectedIndex = (int)Options.GIFDither;
+
+			// AMF
+			cbAMFUsage.SelectedIndex = (int)Options.AMF_usage;
+			cbAMFQuality.SelectedIndex = (int)Options.AMF_quality;
+
+			// QuickSync
+			nudQSVBitrate.Value=(Options.QSV_bitrate);
+			cbQSVPreset.SelectedIndex = (int)Options.QSV_preset;
+			
+			// AAC
+			tbAACBitrate.Value = Options.AAC_bitrate / 32;
+
+			// Vorbis
+			tbVorbis_qscale.Value = Options.Vorbis_qscale;
+
+			// MP3
+			tbMP3_qscale.Value = FFmpegOptions.mp3_max - Options.MP3_qscale;
+
+		
+			watermark_X.Value = Options.WaterMark_X;
+			watermark_Y.Value = Options.WaterMark_Y;
+			watermark_location_top.Checked = Options.WaterMark_location_Top;
+			watermark_location_bottom.Checked = !watermark_location_top.Checked;
+			watermark_location_left.Checked = Options.WaterMark_location_Left;
+			watermark_location_right.Checked = !Options.WaterMark_location_Left;
+			watermark_opacity.Value = Options.WaterMark_Opacity;
+			watermark_opacity_text.Text = "%" + watermark_opacity.Value;
+			watermark_use.Checked = Options.WaterMarkUse;
+
+			settingsLoaded = true;
+			UpdateUI();
+		}
+		
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (tabControl1.SelectedTab == tabControl1.TabPages["Record"])//your specific tabname
@@ -484,6 +569,7 @@ namespace gInk
 				if (File.Exists(gInk_path + @"\ffmpeg.exe"))
 					btnDownload.Visible = false;
 				ffmpeg_path.Text = gInk_path + @"\ffmpeg.exe";
+
 				if (btnDownload.Visible)
 				{
 					system_type = (Is64Bit() ? "win64" : "win32");
@@ -497,23 +583,12 @@ namespace gInk
 					gbFFmpegExe.Controls.Add(progressBar1);
 				}
 
-				 logo = Path.Combine(gInk_path, "Logo.png");
+				logo = Path.Combine(gInk_path, "Logo.png");
 				if (File.Exists(logo))
 					watermark_show.Image = new Bitmap(logo);
-				//read settings
-				settingsLoaded=false;
-				Options = new FFmpegOptions();
-				
-				watermark_use.Checked = Options.WaterMarkUse;
-				watermark_X.Value = Options.WaterMark_X;
-				watermark_Y.Value = Options.WaterMark_Y;
-				watermark_location_top.Checked = Options.WaterMark_location_Top;
-				watermark_location_bottom.Checked = !watermark_location_top.Checked;
-				watermark_location_left.Checked = Options.WaterMark_location_Left;
-				watermark_location_right.Checked = !Options.WaterMark_location_Left;
-				watermark_opacity.Value = Options.WaterMark_Opacity;
-				watermark_opacity_text.Text = "%" + watermark_opacity.Value;
-				settingsLoaded = true;
+				//read ffmpeg settings
+
+				load_ffmpeg_settings();
 			}
 		}
 		private void watermark_chose_MouseClick(object sender, MouseEventArgs e)
@@ -582,13 +657,11 @@ namespace gInk
 			if (txtCommandLinePreview.TextLength > 0)
 			a.test_commands(txtCommandLinePreview.Text);
 		}
-
+		
 		private void btnRefreshSources_Click(object sender, EventArgs e)
 		{
 			btnRefreshSources.Enabled = false;
 			FFmpeg a = new FFmpeg();
-			
-			
 			DirectShowDevices devs = a.GetDirectShowDevices();
 			cboVideoSource.Items.Clear();
 			cboVideoSource.Items.Add("None");
@@ -601,18 +674,194 @@ namespace gInk
 				cboAudioSource.Items.AddRange(devs.AudioDevices.ToArray());
 
 			}
+		
 			btnRefreshSources.Enabled = true;
 		}
 
-		private void txtCommandLinePreview_TextChanged(object sender, EventArgs e)
+		private void cboVideoCodec_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.VideoCodec = (FFmpegVideoCodec)cboVideoCodec.SelectedIndex;
+
+			if (cboVideoCodec.SelectedIndex >= 0)
+			{
+				switch (Options.VideoCodec)
+				{
+					default:
+					case FFmpegVideoCodec.libx264:
+					case FFmpegVideoCodec.libx265:
+						tcFFmpegVideoCodecs.SelectedIndex = 0;
+						break;
+					case FFmpegVideoCodec.libvpx:
+					case FFmpegVideoCodec.libvpx_vp9:
+						tcFFmpegVideoCodecs.SelectedIndex = 1;
+						break;
+					case FFmpegVideoCodec.libxvid:
+						tcFFmpegVideoCodecs.SelectedIndex = 2;
+						break;
+					case FFmpegVideoCodec.h264_nvenc:
+					case FFmpegVideoCodec.hevc_nvenc:
+						tcFFmpegVideoCodecs.SelectedIndex = 3;
+						break;
+					case FFmpegVideoCodec.gif:
+						tcFFmpegVideoCodecs.SelectedIndex = 4;
+						break;
+					case FFmpegVideoCodec.h264_amf:
+					case FFmpegVideoCodec.hevc_amf:
+						tcFFmpegVideoCodecs.SelectedIndex = 5;
+						break;
+					case FFmpegVideoCodec.h264_qsv:
+					case FFmpegVideoCodec.hevc_qsv:
+						tcFFmpegVideoCodecs.SelectedIndex = 6;
+						break;
+				}
+			}
+
+			UpdateUI();
+		}
+
+		private void cboAudioCodec_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.AudioCodec = (FFmpegAudioCodec)cboAudioCodec.SelectedIndex;
+
+			if (cboAudioCodec.SelectedIndex >= 0)
+			{
+				switch (Options.AudioCodec)
+				{
+					default:
+					case FFmpegAudioCodec.libvoaacenc:
+						tcFFmpegAudioCodecs.SelectedIndex = 0;
+						break;
+					case FFmpegAudioCodec.libopus:
+						tcFFmpegAudioCodecs.SelectedIndex = 1;
+						break;
+					case FFmpegAudioCodec.libvorbis:
+						tcFFmpegAudioCodecs.SelectedIndex = 2;
+						break;
+					case FFmpegAudioCodec.libmp3lame:
+						tcFFmpegAudioCodecs.SelectedIndex = 3;
+						break;
+				}
+			}
+
+			UpdateUI();
+		}
+
+		private void nudx264CRF_ValueChanged(object sender, EventArgs e)
+		{
+			Options.x264_CRF = (int)nudx264CRF.Value;
+			UpdateUI();
+		}
+
+		private void cbx264Preset_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
+			Options.x264_Preset = (FFmpegPreset)cbx264Preset.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void nudVP8Bitrate_ValueChanged(object sender, EventArgs e)
+		{
+			Options.VPx_bitrate = (int)nudVP8Bitrate.Value;
+			UpdateUI();
+		}
+
+		private void nudXvidQscale_ValueChanged(object sender, EventArgs e)
+		{
+			Options.XviD_qscale = (int)nudXvidQscale.Value;
+			UpdateUI();
+		}
+
+		private void cbNVENCPreset_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.NVENC_preset = (FFmpegNVENCPreset)cbNVENCPreset.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void nudNVENCBitrate_ValueChanged(object sender, EventArgs e)
+		{
+			Options.NVENC_bitrate = (int)nudNVENCBitrate.Value;
+			UpdateUI();
+		}
+
+		private void cbGIFStatsMode_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.GIFStatsMode = (FFmpegPaletteGenStatsMode)cbGIFStatsMode.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void cbGIFDither_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+			Options.GIFDither = (FFmpegPaletteUseDither)cbGIFDither.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void cbAMFUsage_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.AMF_usage = (FFmpegAMFUsage)cbAMFUsage.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void cbAMFQuality_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.AMF_quality = (FFmpegAMFQuality)cbAMFQuality.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void cbQSVPreset_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.QSV_preset = (FFmpegQSVPreset)cbQSVPreset.SelectedIndex;
+			UpdateUI();
+		}
+
+		private void nudQSVBitrate_ValueChanged(object sender, EventArgs e)
+		{
+			Options.QSV_bitrate = (int)nudQSVBitrate.Value;
+			UpdateUI();
+		}
+
+		private void tbAACBitrate_ValueChanged(object sender, EventArgs e)
+		{
+			Options.AAC_bitrate = tbAACBitrate.Value * 32;
+			UpdateUI();
+		}
+
+		private void tbOpusBirate_ValueChanged(object sender, EventArgs e)
+		{
+			Options.Opus_bitrate = tbOpusBitrate.Value * 32;
+			UpdateUI();
+		}
+
+		private void tbVorbis_qscale_ValueChanged(object sender, EventArgs e)
+		{
+			Options.Vorbis_qscale = tbVorbis_qscale.Value;
+			UpdateUI();
+		}
+
+		private void tbMP3_qscale_ValueChanged(object sender, EventArgs e)
+		{
+			Options.MP3_qscale = FFmpegOptions.mp3_max - tbMP3_qscale.Value;
+			UpdateUI();
+		}
+
+		private void tbUserArgs_TextChanged(object sender, EventArgs e)
+		{
+			Options.UserArgs = tbUserArgs.Text;
+			UpdateUI();
 		}
 
 		private void cboVideoSource_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			
+			Options.VideoSource = cboVideoSource.Text;
+			UpdateUI();
 		}
+
+		private void cboAudioSource_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Options.AudioSource = cboAudioSource.Text;
+			UpdateUI();
+		}
+		
 
 		private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{

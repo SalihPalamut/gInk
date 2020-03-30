@@ -20,7 +20,7 @@ namespace gInk
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
         public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
-        public Bitmap image_pointer, image_pointer_act;
+        public Bitmap image_pointer, image_pointer_act,image_rectange;
         public Bitmap[] image_pen;
         public Bitmap[] image_pen_act;
         public Bitmap image_eraser_act, image_eraser;
@@ -344,6 +344,18 @@ namespace gInk
             g = Graphics.FromImage(image_pointer_act);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.pointer_act, 0, 0, btPointer.Width, btPointer.Height);
+
+
+
+            image_rectange = new Bitmap(25, 25);
+            g = Graphics.FromImage(image_rectange);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0,25, 25);
+            image_rectange = new Bitmap(btPointer.Width, btPointer.Height);
+            g = Graphics.FromImage(image_rectange);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0, btPointer.Width, btPointer.Height);
+
 
             image_pen = new Bitmap[Root.MaxPenCount];
             image_pen_act = new Bitmap[Root.MaxPenCount];

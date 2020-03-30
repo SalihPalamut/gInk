@@ -10,199 +10,14 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.Drawing;
 using System.Globalization;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace gInk
 {
     class FFmpegOptions : IDisposable
     {
-        public enum ScreenRecordOutput
-        {
-            [Description("FFmpeg")]
-            FFmpeg,
-            [Description("Animated GIF")]
-            GIF
-        }
-
-        public enum ScreenRecordGIFEncoding // Localized
-        {
-            FFmpeg,
-            NET,
-            OctreeQuantizer
-        }
-
-        public enum RegionResult
-        {
-            Close,
-            Region,
-            LastRegion,
-            Fullscreen,
-            Monitor,
-            ActiveMonitor,
-            AnnotateRunAfterCaptureTasks,
-            AnnotateContinueTask,
-            AnnotateCancelTask
-        }
-
-        public enum NodeType
-        {
-            None,
-            Rectangle,
-            Line,
-            Point,
-            Freehand
-        }
-
-        internal enum NodePosition
-        {
-            TopLeft,
-            Top,
-            TopRight,
-            Right,
-            BottomRight,
-            Bottom,
-            BottomLeft,
-            Left,
-            Extra
-        }
-
-        internal enum NodeShape
-        {
-            Square, Circle, Diamond, CustomNode
-        }
-
-        public enum FFmpegVideoCodec
-        {
-            [Description("H.264 / x264")]
-            libx264,
-            [Description("H.265 / x265")]
-            libx265,
-            [Description("VP8 (WebM)")]
-            libvpx,
-            [Description("VP9 (WebM)")]
-            libvpx_vp9,
-            [Description("MPEG-4 / Xvid")]
-            libxvid,
-            [Description("H.264 / NVENC")]
-            h264_nvenc,
-            [Description("HEVC / NVENC")]
-            hevc_nvenc,
-            [Description("H.264 / AMF")]
-            h264_amf,
-            [Description("HEVC / AMF")]
-            hevc_amf,
-            [Description("H.264 / Quick Sync")]
-            h264_qsv,
-            [Description("HEVC / Quick Sync")]
-            hevc_qsv,
-            [Description("GIF")]
-            gif,
-            [Description("WebP")]
-            libwebp,
-            [Description("APNG")]
-            apng
-        }
-
-        public enum FFmpegAudioCodec
-        {
-            [Description("AAC")]
-            libvoaacenc,
-            [Description("Opus")]
-            libopus,
-            [Description("Vorbis")]
-            libvorbis,
-            [Description("MP3")]
-            libmp3lame
-        }
-
-        public enum FFmpegPreset
-        {
-            [Description("Ultra fast")]
-            ultrafast,
-            [Description("Super fast")]
-            superfast,
-            [Description("Very fast")]
-            veryfast,
-            [Description("Faster")]
-            faster,
-            [Description("Fast")]
-            fast,
-            [Description("Medium")]
-            medium,
-            [Description("Slow")]
-            slow,
-            [Description("Slower")]
-            slower,
-            [Description("Very slow")]
-            veryslow
-        }
-
-        public enum FFmpegNVENCPreset
-        {
-            [Description("Default")]
-            @default,
-            [Description("High quality 2 passes")]
-            slow,
-            [Description("High quality 1 pass")]
-            medium,
-            [Description("High performance 1 pass")]
-            fast,
-            [Description("High performance")]
-            hp,
-            [Description("High quality")]
-            hq,
-            [Description("Bluray disk")]
-            bd,
-            [Description("Low latency")]
-            ll,
-            [Description("Low latency high quality")]
-            llhq,
-            [Description("Low latency high performance")]
-            llhp,
-            [Description("Lossless")]
-            lossless,
-            [Description("Lossless high performance")]
-            losslesshp
-        }
-
-        public enum FFmpegAMFUsage
-        {
-            [Description("Generic Transcoding")]
-            transcoding = 0,
-            [Description("Ultra Low Latency")]
-            ultralowlatency = 1,
-            [Description("Low Latency")]
-            lowlatency = 2,
-            [Description("Webcam")]
-            webcam = 3
-        }
-
-        public enum FFmpegAMFQuality
-        {
-            [Description("Prefer Speed")]
-            speed = 0,
-            [Description("Balanced")]
-            balanced = 1,
-            [Description("Prefer Quality")]
-            quality = 2
-        }
-
-        public enum FFmpegQSVPreset
-        {
-            [Description("Very fast")]
-            veryfast,
-            [Description("Faster")]
-            faster,
-            [Description("Fast")]
-            fast,
-            [Description("Medium")]
-            medium,
-            [Description("Slow")]
-            slow,
-            [Description("Slower")]
-            slower,
-            [Description("Very slow")]
-            veryslow
-        }
+    
         public const string SourceNone = "None";
         public const string SourceGDIGrab = "GDI grab";
         public const string SourceVideoDevice = "screen-capture-recorder";
@@ -227,25 +42,6 @@ namespace gInk
         public delegate void EncodeProgressChangedEventHandler(float percentage);
         public event EncodeProgressChangedEventHandler EncodeProgressChanged;
 
-        public enum FFmpegTune
-        {
-            film, animation, grain, stillimage, psnr, ssim, fastdecode, zerolatency
-        }
-
-        public enum FFmpegPaletteGenStatsMode
-        {
-            full, diff
-        }
-
-        public enum FFmpegPaletteUseDither
-        {
-            none,
-            bayer,
-            heckbert,
-            floyd_steinberg,
-            sierra2,
-            sierra2_4a
-        }
         // General
         public bool OverrideCLIPath { get; set; } = false;
         public string CLIPath { get; set; } = "";
@@ -371,15 +167,38 @@ namespace gInk
         }
         [JsonConstructor]
         public FFmpegOptions(bool a = true)
-        { }
+        {
+            CaptureArea = new CaptureArea();
+        }
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+   
+
+
+        private CaptureArea getScreenSize()
+        {
+            CaptureArea ret = new CaptureArea();
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            IntPtr screenDc = g.GetHdc();
+            const int DESKTOPHORZRES = 118;
+            const int DESKTOPVERTRES = 117;
+            ret.Width = GetDeviceCaps(screenDc, DESKTOPHORZRES);
+            ret.Height = GetDeviceCaps(screenDc, DESKTOPVERTRES);
+            
+            return ret;
+        }
         public FFmpegOptions()
         {
+
+          
 
             string tempFilePath = Directory.GetCurrentDirectory() + "\\a.json";
             if (!File.Exists(tempFilePath))
             {
+
+                CaptureArea = getScreenSize();
                 save();
-                return;
+                //return;
             }
 
             using (StreamReader streamReader = new StreamReader(tempFilePath))
@@ -393,14 +212,16 @@ namespace gInk
                     } catch { }
                 }
             }
-
+            if (OutputPath == null) OutputPath = "output";
+            if ((CaptureArea.Width  | CaptureArea.Height)==0)
+                CaptureArea = getScreenSize();
         }
-        public string OutputPath { get; set; }
+        public string OutputPath { get; set; }= "output";
         public string InputPath { get; set; }
         public float Duration { get; set; }
-        public bool IsRecording=false, DrawCursor=true, IsLossless=false;
-        public int FPS { get; set; }
-        public Rectangle CaptureArea { get; set; }
+        public bool IsRecording=true, DrawCursor=true, IsLossless=false;
+        public int FPS { get; set; } = 30;
+        public CaptureArea CaptureArea { get; set; } 
         
         public string GetFFmpegArgs(bool isCustom = false)
         {
@@ -606,6 +427,21 @@ namespace gInk
             return CustomCommands;
         }
 
+    }
+
+    public class CaptureArea
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public CaptureArea(int x = 0, int y=0, int width=0, int height=0)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
     }
 
     internal class WritablePropertiesOnlyResolver : DefaultContractResolver

@@ -392,11 +392,11 @@ namespace gInk
 			PenAttr[3].Width = 80;
 			PenAttr[3].Transparency = 0;
 
-			PenEnabled[4] = false;
+			PenEnabled[4] = true;
 			PenAttr[4] = new DrawingAttributes();
 			PenAttr[4].Color = Color.FromArgb(120, 175, 70);
-			PenAttr[4].Width = 80;
-			PenAttr[4].Transparency = 0;
+			PenAttr[4].Width = 250;
+			PenAttr[4].Transparency =127;
 
 			PenEnabled[5] = true;
 			PenAttr[5] = new DrawingAttributes();

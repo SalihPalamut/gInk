@@ -70,6 +70,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumEx.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="FFmpegOptions.cs" />
     <Compile Include="FFmpeg.cs" />
     <Compile Include="FormAbout.cs">
