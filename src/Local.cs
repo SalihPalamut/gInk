@@ -60,10 +60,10 @@ namespace gInk
 
 		public Local()
 		{
-			ButtonNamePen[0] = "Pen 0";
-			ButtonNamePen[1] = "Pen 1";
-			ButtonNamePen[2] = "Pen 2";
-			ButtonNamePen[3] = "Pen 3";
+			ButtonNamePen[0] = "Red";
+			ButtonNamePen[1] = "Green";
+			ButtonNamePen[2] = "Blue";
+			ButtonNamePen[3] = "Colorfull";
 			ButtonNamePen[4] = "Pen 4";
 			ButtonNamePen[5] = "Pen 5";
 			ButtonNamePen[6] = "Pen 6";

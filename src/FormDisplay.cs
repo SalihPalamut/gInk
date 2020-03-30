@@ -16,7 +16,6 @@ namespace gInk
 		IntPtr canvusDc;
 		IntPtr OneStrokeCanvus;
 		IntPtr onestrokeDc;
-		IntPtr BlankCanvus;
 		IntPtr blankcanvusDc;
 		Graphics gCanvus;
 		public Graphics gOneStrokeCanvus;
@@ -92,8 +91,8 @@ namespace gInk
 
 			//this.DoubleBuffered = true;
 
-			gpButtonsImage = new Bitmap(2400, 53);
-			gpPenWidthImage = new Bitmap(200, 53);
+			gpButtonsImage = new Bitmap(2400, 25);
+			gpPenWidthImage = new Bitmap(200, 25);
 			TransparentBrush = new SolidBrush(Color.Transparent);
 			SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
 
@@ -181,6 +180,7 @@ namespace gInk
 					Root.FormCollection.gpPenWidth.DrawToBitmap(gpPenWidthImage, new Rectangle(0, 0, width, height));
 
 				gCanvus.DrawImage(gpPenWidthImage, left, top);
+				
 			}
 		}
 		public void DrawButtons(Graphics g, bool redrawbuttons, bool exiting = false)
@@ -358,7 +358,6 @@ namespace gInk
 
 			int dj;
 			int maxidpixels = 0;
-			float maxidchdrio = 0;
 			int maxdj = 0;
 
 
@@ -367,7 +366,7 @@ namespace gInk
 			int iend = Width / 2 + Width / 4;
 			for (dj = -Height * 3 / 8 + 1; dj < Height * 3 / 8 - 1; dj++)
 			{
-				int chdpixels = 0, idpixels = 0;
+				int idpixels = 0;
 				for (int j = Height / 2 - Height / 8; j < Height / 2 + Height / 8; j += 10)
 				{
 					L(istart - 10, j);
@@ -431,18 +430,15 @@ namespace gInk
 			blend.SourceConstantAlpha = 255;  // additional alpha multiplier to the whole image. value 255 means multiply with 1.
 			blend.AlphaFormat = AC_SRC_ALPHA;
 
-			if (draw)
-				UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, canvusDc, ref pointSource, 0, ref blend, ULW_ALPHA);
-			else
-				UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, blankcanvusDc, ref pointSource, 0, ref blend, ULW_ALPHA);
-
+			UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, (draw? canvusDc : blankcanvusDc), ref pointSource, 0, ref blend, ULW_ALPHA);
+			
 			//Clean-up
 			ReleaseDC(IntPtr.Zero, screenDc);
 		}
 
 		int stackmove = 0;
 		int Tick = 0;
-		DateTime TickStartTime;
+
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			Tick++;
@@ -645,6 +641,11 @@ namespace gInk
 		static extern int GetBitmapBits(IntPtr hbmp, int cbBuffer, [Out] byte[] lpvBits);
 		[DllImport("gdi32.dll")]
 		static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
+
+		private void FormDisplay_Load(object sender, EventArgs e)
+		{
+
+		}
 
 		[DllImport("gdi32.dll")]
 		static extern int GetDeviceCaps(IntPtr hdc, int nIndex);

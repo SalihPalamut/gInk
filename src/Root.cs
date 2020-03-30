@@ -368,31 +368,31 @@ namespace gInk
 
 		public void SetDefaultPens()
 		{
-			PenEnabled[0] = false;
+			PenEnabled[0] = true;
 			PenAttr[0] = new DrawingAttributes();
-			PenAttr[0].Color = Color.FromArgb(80, 80, 80);
+			PenAttr[0].Color = Color.FromArgb(255,0, 0);
 			PenAttr[0].Width = 80;
 			PenAttr[0].Transparency = 0;
 
 			PenEnabled[1] = true;
 			PenAttr[1] = new DrawingAttributes();
-			PenAttr[1].Color = Color.FromArgb(225, 60, 60);
+			PenAttr[1].Color = Color.FromArgb(0, 255,0);
 			PenAttr[1].Width = 80;
 			PenAttr[1].Transparency = 0;
 
 			PenEnabled[2] = true;
 			PenAttr[2] = new DrawingAttributes();
-			PenAttr[2].Color = Color.FromArgb(30, 110, 200);
+			PenAttr[2].Color = Color.FromArgb(0, 0, 255);
 			PenAttr[2].Width = 80;
 			PenAttr[2].Transparency = 0;
 
 			PenEnabled[3] = true;
 			PenAttr[3] = new DrawingAttributes();
-			PenAttr[3].Color = Color.FromArgb(235, 180, 55);
+			PenAttr[3].Color = Color.FromArgb(0, 0, 0);
 			PenAttr[3].Width = 80;
 			PenAttr[3].Transparency = 0;
 
-			PenEnabled[4] = true;
+			PenEnabled[4] = false;
 			PenAttr[4] = new DrawingAttributes();
 			PenAttr[4].Color = Color.FromArgb(120, 175, 70);
 			PenAttr[4].Width = 80;
