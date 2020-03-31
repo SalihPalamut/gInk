@@ -312,6 +312,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThemeColorPicker\ThemeColorPicker.csproj">
+      <Project>{a4d1edb0-61e7-4943-aa8d-e545456bc392}</Project>
+      <Name>ThemeColorPicker</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

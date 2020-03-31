@@ -20,7 +20,7 @@ namespace gInk
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
         public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
-        public Bitmap image_pointer, image_pointer_act,image_rectange;
+        public Bitmap image_pointer, image_pointer_act, image_rectange;
         public Bitmap[] image_pen;
         public Bitmap[] image_pen_act;
         public Bitmap image_eraser_act, image_eraser;
@@ -232,6 +232,9 @@ namespace gInk
             pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
             gpPenWidth.Controls.Add(pboxPenWidthIndicator);
 
+
+           
+
             IC = new InkOverlay(this.Handle);
             IC.CollectionMode = CollectionMode.InkOnly;
             IC.AutoRedraw = false;
@@ -350,7 +353,7 @@ namespace gInk
             image_rectange = new Bitmap(25, 25);
             g = Graphics.FromImage(image_rectange);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0,25, 25);
+            g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0, 25, 25);
             image_rectange = new Bitmap(btPointer.Width, btPointer.Height);
             g = Graphics.FromImage(image_rectange);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -1364,18 +1367,37 @@ namespace gInk
                     if (b == 3)
                     {
                         SelectPen(-2);
-                        ColorDialog PenColor = new ColorDialog();
+                        //Point pt = PointToScreen(HitMovingToolbareXY);
+                        Point pt = new Point(gpPenWidth.Left, gpPenWidth.Top);
+                        //HitMovingToolbareXY
+                        ThemeColorPickerWindow PenColor = new ThemeColorPickerWindow(pt, System.Windows.Forms.FormBorderStyle.FixedToolWindow, ThemeColorPickerWindow.Action.CloseWindow, ThemeColorPickerWindow.Action.CloseWindow);
+                        PenColor.Location = new Point(gpButtons.Left, gpButtons.Top - PenColor.Height);
+                        
+                        PenColor.ActionAfterColorSelected = ThemeColorPickerWindow.Action.HideWindow;
+                        //  f.ColorSelected += new ThemeColorPickerWindow.colorSelected(f_ColorSelected);
+
+                     
                         PenColor.Color = Root.PenAttr[3].Color;
-                        if (PenColor.ShowDialog() == DialogResult.OK)
-                        {
+                        PenColor.ShowDialog();
+                        
                             ((Button)sender).BackColor = PenColor.Color;
                             Root.PenAttr[3].Color = PenColor.Color;
-                        }
+                            PenColor.Close();
+                        
+
+
+                        /*  ColorDialog PenColor = new ColorDialog();
+                          PenColor.Color = Root.PenAttr[3].Color;
+                          if (PenColor.ShowDialog() == DialogResult.OK)
+                          {
+                              ((Button)sender).BackColor = PenColor.Color;
+                              Root.PenAttr[3].Color = PenColor.Color;
+                          }*/
                     }
                     SelectPen(b);
                 }
         }
-
+   
         public void btEraser_Click(object sender, EventArgs e)
         {
             if (ToolbarMoved)

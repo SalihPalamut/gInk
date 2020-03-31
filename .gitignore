@@ -13,3 +13,5 @@ packages
 .vs
 src/bin
 src/obj
+ThemeColorPicker/bin
+ThemeColorPicker/obj
