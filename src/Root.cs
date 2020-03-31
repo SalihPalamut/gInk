@@ -145,7 +145,7 @@ namespace gInk
 			trayIcon.MouseClick += TrayIcon_Click;
 			trayIcon.BalloonTipText = Local.NotificationSnapshot;
 			trayIcon.BalloonTipClicked += TrayIcon_BalloonTipClicked;
-			SetTrayIconColor();
+			trayIcon.Icon = global::gInk.Properties.Resources.g_rec1;
 
 			SetHotkey();
 
@@ -436,26 +436,6 @@ namespace gInk
 			AutoScroll = false;
 			WhiteTrayIcon = false;
 			SnapshotBasePath = "%USERPROFILE%/Pictures/gInk/";
-		}
-
-		public void SetTrayIconColor()
-		{
-			if (WhiteTrayIcon)
-			{
-				if (File.Exists("icon_white.ico"))
-					trayIcon.Icon = new Icon("icon_white.ico");
-				else
-					trayIcon.Icon = global::gInk.Properties.Resources.icon_white;
-			}
-			else
-			{
-				if (File.Exists("icon_red.ico"))
-					trayIcon.Icon = new Icon("icon_red.ico");
-				else
-					trayIcon.Icon = global::gInk.Properties.Resources.icon_red;
-			}
-
-
 		}
 
 		public void ReadOptions(string file)

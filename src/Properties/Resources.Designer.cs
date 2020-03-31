@@ -143,6 +143,26 @@ namespace gInk.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap g_rec {
+            get {
+                object obj = ResourceManager.GetObject("g_rec", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon g_rec1 {
+            get {
+                object obj = ResourceManager.GetObject("g_rec1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap garbage {
             get {
                 object obj = ResourceManager.GetObject("garbage", resourceCulture);
@@ -177,26 +197,6 @@ namespace gInk.Properties {
             get {
                 object obj = ResourceManager.GetObject("i18n", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        public static System.Drawing.Icon icon_red {
-            get {
-                object obj = ResourceManager.GetObject("icon_red", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        public static System.Drawing.Icon icon_white {
-            get {
-                object obj = ResourceManager.GetObject("icon_white", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         

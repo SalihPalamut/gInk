@@ -11,3 +11,5 @@ packages
 *.lnk
 *vshost.exe*
 .vs
+src/bin
+src/obj

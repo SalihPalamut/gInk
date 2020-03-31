@@ -137,22 +137,33 @@ namespace gInk
             create_command.AppendFormat("-t 00:00:0{0} -c", time);
             cmd=cmd.Replace("-c", create_command.ToString());
             Open(cmd);
-            while (IsProcessRunning);
+           
 
-            if (ExtCode == 1)
+            if (ExtCode == 1 || !cmd.Contains("-y"))
             {
                 ErrorDump(cmd);
             }
             else
             {
+                string ptrn= "-y.*\"(.*)\"";
+                Regex Fname = new Regex(ptrn, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+                Match match = Fname.Match(cmd);
+              
+                if (!match.Success) return;
+                string filename = match.Groups[1].Value;
+
+                if (!File.Exists(FFmpeg_path + "ffplay.exe"))
+                {
+                    ErrorDump(filename,"");
+                }
                 string title = "Ön İzleme";
                 create_command.Clear();
                 create_command.AppendFormat(" -window_title \"{0}\"",title);
-                cmd = "-autoexit -i output.mp4 -x 720 -y 480 -volume 100" + create_command.ToString();
+                cmd = "-autoexit -i "+ filename + " -x 720 -y 480 -volume 100" + create_command.ToString();
                 Open(cmd, "ffplay.exe");
             }            
         }
-        public string ErrorDump(string cmd)
+        public string ErrorDump(string cmd,string execut= "ffmpeg.exe")
         {
             string ret = "";
             try
@@ -163,7 +174,7 @@ namespace gInk
                     {
                         FileName = "cmd.exe",
                         WorkingDirectory = Path.GetDirectoryName(FFmpeg_path),
-                        Arguments = $"/k {"ffmpeg.exe"} {cmd}",
+                        Arguments = $"/k {execut} {cmd}",
                         UseShellExecute = true
                     };
 
