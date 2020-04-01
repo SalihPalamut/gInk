@@ -26,7 +26,7 @@ namespace System.Windows.Forms
 
         public Action ActionAfterColorSelected { get { return _as; } set { _as = value; } }
         public Action ActionAfterLostFocus { get { return _al; } set { _al = value; } }
-   
+
         public int[] CustomColors { get { return themeColorPicker1.CustomColors; } set { themeColorPicker1.CustomColors = value; } }
 
         public Color Color
@@ -48,7 +48,7 @@ namespace System.Windows.Forms
                 { }
             }
         }
-      
+
         public delegate void colorSelected(object sender, ColorSelectedArg e);
 
         /// <summary>
@@ -63,17 +63,29 @@ namespace System.Windows.Forms
         /// <param name="borderStyle">How the border should displayed.</param>
         /// <param name="actionAfterColorSelected">The form action of 0o-.</param>
         /// <param name="actionAfterLostFocus"></param>
+        public ThemeColorPickerWindow(FormBorderStyle borderStyle, Action actionAfterColorSelected, Action actionAfterLostFocus){
+            values(borderStyle, actionAfterColorSelected, actionAfterLostFocus);
+        }
+
+
         public ThemeColorPickerWindow(Point startLocation, FormBorderStyle borderStyle, Action actionAfterColorSelected, Action actionAfterLostFocus)
+        {
+            values(borderStyle, actionAfterColorSelected, actionAfterLostFocus);
+            this.Location = startLocation;
+        }
+
+        private void values(FormBorderStyle borderStyle, Action actionAfterColorSelected, Action actionAfterLostFocus)
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = startLocation;
+
             this.FormBorderStyle = borderStyle;
             this.ActionAfterColorSelected = actionAfterColorSelected;
             this.ActionAfterLostFocus = actionAfterLostFocus;
             this.LostFocus += new EventHandler(ThemeColorPickerWindow_LostFocus);
             this.Deactivate += new EventHandler(ThemeColorPickerWindow_Deactivate);
             themeColorPicker1.ShowCustomMoreColorWindow += new ThemeColorPicker.moreColorWindowShow(themeColorPicker1_ShowCustomMoreColorWindow);
+
         }
 
         void themeColorPicker1_ShowCustomMoreColorWindow(object sender)

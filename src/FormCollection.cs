@@ -233,7 +233,7 @@ namespace gInk
             gpPenWidth.Controls.Add(pboxPenWidthIndicator);
 
 
-           
+
 
             IC = new InkOverlay(this.Handle);
             IC.CollectionMode = CollectionMode.InkOnly;
@@ -1366,38 +1366,26 @@ namespace gInk
                 {
                     if (b == 3)
                     {
+                        //!Select Cursor
                         SelectPen(-2);
-                        //Point pt = PointToScreen(HitMovingToolbareXY);
-                        Point pt = new Point(gpPenWidth.Left, gpPenWidth.Top);
-                        //HitMovingToolbareXY
-                        ThemeColorPickerWindow PenColor = new ThemeColorPickerWindow(pt, System.Windows.Forms.FormBorderStyle.FixedToolWindow, ThemeColorPickerWindow.Action.CloseWindow, ThemeColorPickerWindow.Action.CloseWindow);
-                        PenColor.Location = new Point(gpButtons.Left, gpButtons.Top - PenColor.Height);
-                        
+                        //!Create Color picker
+                        ThemeColorPickerWindow PenColor = new ThemeColorPickerWindow(System.Windows.Forms.FormBorderStyle.FixedToolWindow, ThemeColorPickerWindow.Action.CloseWindow, ThemeColorPickerWindow.Action.CloseWindow);
+                        int top = gpButtons.Top;
+                        if (top > PenColor.Height)
+                            top -= PenColor.Height;
+                        PenColor.Location = new Point(gpButtons.Left, top);
                         PenColor.ActionAfterColorSelected = ThemeColorPickerWindow.Action.HideWindow;
-                        //  f.ColorSelected += new ThemeColorPickerWindow.colorSelected(f_ColorSelected);
-
-                     
                         PenColor.Color = Root.PenAttr[3].Color;
                         PenColor.ShowDialog();
-                        
-                            ((Button)sender).BackColor = PenColor.Color;
-                            Root.PenAttr[3].Color = PenColor.Color;
-                            PenColor.Close();
-                        
-
-
-                        /*  ColorDialog PenColor = new ColorDialog();
-                          PenColor.Color = Root.PenAttr[3].Color;
-                          if (PenColor.ShowDialog() == DialogResult.OK)
-                          {
-                              ((Button)sender).BackColor = PenColor.Color;
-                              Root.PenAttr[3].Color = PenColor.Color;
-                          }*/
+                        //!Change Color
+                        ((Button)sender).BackColor = PenColor.Color;
+                        Root.PenAttr[3].Color = PenColor.Color;
+                        PenColor.Close();
                     }
                     SelectPen(b);
                 }
         }
-   
+
         public void btEraser_Click(object sender, EventArgs e)
         {
             if (ToolbarMoved)
