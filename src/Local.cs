@@ -56,7 +56,7 @@ namespace gInk
 		public string OptionsHotkeysglobal = "Global hotkey (start drawing, switch between mouse pointer and drawing)";
 		public string OptionsHotkeysEnableinpointer = "Enable all following hotkeys in mouse pointer mode (may cause a mess)";
 
-		public string NotificationSnapshot = "Snapshot saved. Click here to browse snapshots.";
+		public string NotificationSnapshot = "File saved. Click here to browse snapshots.";
 
 		public Local()
 		{

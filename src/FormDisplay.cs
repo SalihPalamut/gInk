@@ -342,7 +342,7 @@ namespace gInk
 				DeleteObject(hBmp);
 				ReleaseDC(IntPtr.Zero, screenDc);
 				DeleteDC(hDest);
-
+				Root.isRecord = false;
 				Root.UponBalloonSnap = true;
 			}
 		}

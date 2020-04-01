@@ -37,10 +37,10 @@ namespace gInk
         public const int mp3_max = 9;
 
         public delegate void EncodeStartedEventHandler();
-        public event EncodeStartedEventHandler EncodeStarted;
+        
 
         public delegate void EncodeProgressChangedEventHandler(float percentage);
-        public event EncodeProgressChangedEventHandler EncodeProgressChanged;
+    
 
         // General
         public bool OverrideCLIPath { get; set; } = false;

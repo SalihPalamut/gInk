@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace gInk
 {
@@ -42,7 +41,7 @@ namespace gInk
         public virtual int Open(string args = null,string program="ffmpeg.exe")
         {
             OutputData.Clear();
-           program= FFmpeg_path+program;
+            program= FFmpeg_path+program;
 
 
                 if (File.Exists(program))
@@ -69,7 +68,7 @@ namespace gInk
                     process.StartInfo = psi;
 
                     process.Start();
-
+                
                     if (psi.RedirectStandardOutput) process.BeginOutputReadLine();
                     if (psi.RedirectStandardError) process.BeginErrorReadLine();
 
@@ -80,7 +79,8 @@ namespace gInk
                     }
                     finally
                     {
-                        IsProcessRunning = false;
+                
+                            IsProcessRunning = false;
                     }
                     ExtCode = process.ExitCode;
                     return ExtCode;
@@ -107,7 +107,7 @@ namespace gInk
         {
             DirectShowDevices devices=new DirectShowDevices();
             Open("-list_devices true -f dshow -i dummy");
-            while (IsProcessRunning) ;
+        
             string types = "DirectShow video devices(.*)DirectShow audio devices(.*)";
             string names = "\\[dshow.*\\]\\s*\"(.*)\".*\n";
             Regex Rtypes = new Regex(types, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
@@ -130,6 +130,15 @@ namespace gInk
             }
             return devices;
         }
+        private string get_filename(string cmd)
+        {
+            string ptrn = "-y.*\"(.*)\"";
+            Regex Fname = new Regex(ptrn, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+            Match match = Fname.Match(cmd);
+
+            if (!match.Success) return null;
+            return match.Groups[1].Value;
+        }
         public void test_commands(string cmd)
         {
             StringBuilder create_command=new StringBuilder();
@@ -145,12 +154,8 @@ namespace gInk
             }
             else
             {
-                string ptrn= "-y.*\"(.*)\"";
-                Regex Fname = new Regex(ptrn, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant);
-                Match match = Fname.Match(cmd);
-              
-                if (!match.Success) return;
-                string filename = match.Groups[1].Value;
+            
+                string filename = get_filename(cmd);
 
                 if (!File.Exists(FFmpeg_path + "ffplay.exe"))
                 {
@@ -188,6 +193,78 @@ namespace gInk
                 ret = ex.Message;
             }
             return ret;
+        }
+      
+        string option="";
+        public void Record(string option)
+        {
+            this.option = option;
+            Open(option);
+        }
+        private void WriteInput(string input)
+        {
+            if (IsProcessRunning && process != null && process.StartInfo != null && process.StartInfo.RedirectStandardInput)
+            {
+                process.StandardInput.WriteLine(input);
+            }
+        }
+        public string Stop_Record()
+        {
+            WriteInput("q");
+            Thread.Sleep(2);
+            while (IsProcessRunning)
+            {
+                Thread.Sleep(2);
+            }
+            if (ExtCode == 0)
+            {
+                string filename= get_filename(option);
+                string file1 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\AppData\Local\gInk\") + filename;
+                if (!File.Exists(file1)) return "1";
+                string file2 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Videos\gRec\");
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
+                file2+= DateTime.Now.ToString(@"yyyy")+"\\";
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
+                file2 += DateTime.Now.ToString(@"MM") + "\\";
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
+
+                file2 += DateTime.Now.ToString("dd_HH_mm_ss");
+                file2 += filename.Substring(filename.Length-4);
+                try
+                {
+               //     File.Copy(file1, file2);
+
+                    byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
+                   using (FileStream source = new FileStream(file1, FileMode.Open, FileAccess.Read))
+                    {
+                        long fileLength = source.Length;
+                        using (FileStream dest = new FileStream(file2, FileMode.CreateNew, FileAccess.Write))
+                        {
+                            long totalBytes = 0;
+                            int currentBlockSize = 0;
+
+                            while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                totalBytes += currentBlockSize;
+                                double persentage = (double)totalBytes * 100.0 / fileLength;
+
+                                dest.Write(buffer, 0, currentBlockSize);
+
+                              
+                            }
+                        }
+                    }
+                    return file2;
+                }
+                catch
+                {
+                    return "2";
+                }
+            }
+            return ExtCode.ToString();
         }
     }
 }
