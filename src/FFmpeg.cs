@@ -16,7 +16,7 @@ namespace gInk
     public  class FFmpeg : IDisposable
     {
         public event DataReceivedEventHandler DataReceived;
-     
+        public event EventHandler Saved;
         protected Process process;
         public int ExtCode { get; private set; }
         public bool IsProcessRunning { get; private set; }
@@ -59,12 +59,13 @@ namespace gInk
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         StandardOutputEncoding = Encoding.UTF8,
-                        StandardErrorEncoding = Encoding.UTF8
+                        StandardErrorEncoding = Encoding.UTF8,
                     };
-
+                   
                     process.EnableRaisingEvents = true;
                     if (psi.RedirectStandardOutput) process.OutputDataReceived += cli_DataReceived;
                     if (psi.RedirectStandardError) process.ErrorDataReceived += cli_DataReceived;
+                    process.Exited += cli_Exit;
                     process.StartInfo = psi;
 
                     process.Start();
@@ -102,7 +103,52 @@ namespace gInk
                 }
             }
         }
+        private void cli_Exit(object sender,EventArgs e)
+        {
+            if (ExtCode == 0)
+            {
+                string filename = get_filename(option);
+                string file1 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\AppData\Local\gInk\") + filename;
+                if (!File.Exists(file1)) return;
+                string file2 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Videos\gRec\");
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
+                file2 += DateTime.Now.ToString(@"yyyy") + "\\";
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
+                file2 += DateTime.Now.ToString(@"MM") + "\\";
+                if (!Directory.Exists(file2))
+                    Directory.CreateDirectory(file2);
 
+                file2 += DateTime.Now.ToString("dd_HH_mm_ss");
+                file2 += filename.Substring(filename.Length - 4);
+                try
+                {
+                    byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
+                    using (FileStream source = new FileStream(file1, FileMode.Open, FileAccess.Read))
+                    {
+                        long fileLength = source.Length;
+                        using (FileStream dest = new FileStream(file2, FileMode.CreateNew, FileAccess.Write))
+                        {
+                            long totalBytes = 0;
+                            int currentBlockSize = 0;
+
+                            while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                totalBytes += currentBlockSize;
+                                double persentage = (double)totalBytes * 100.0 / fileLength;
+                                dest.Write(buffer, 0, currentBlockSize);
+                            }
+                        }
+                    }
+                    Saved(file2, e);
+                }
+                catch
+                {
+                    Saved("Err", e);
+                }
+            }         
+        }
         public DirectShowDevices GetDirectShowDevices() 
         {
             DirectShowDevices devices=new DirectShowDevices();
@@ -208,63 +254,9 @@ namespace gInk
                 process.StandardInput.WriteLine(input);
             }
         }
-        public string Stop_Record()
+        public void Stop_Record()
         {
-            WriteInput("q");
-            Thread.Sleep(2);
-            while (IsProcessRunning)
-            {
-                Thread.Sleep(2);
-            }
-            if (ExtCode == 0)
-            {
-                string filename= get_filename(option);
-                string file1 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\AppData\Local\gInk\") + filename;
-                if (!File.Exists(file1)) return "1";
-                string file2 = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Videos\gRec\");
-                if (!Directory.Exists(file2))
-                    Directory.CreateDirectory(file2);
-                file2+= DateTime.Now.ToString(@"yyyy")+"\\";
-                if (!Directory.Exists(file2))
-                    Directory.CreateDirectory(file2);
-                file2 += DateTime.Now.ToString(@"MM") + "\\";
-                if (!Directory.Exists(file2))
-                    Directory.CreateDirectory(file2);
-
-                file2 += DateTime.Now.ToString("dd_HH_mm_ss");
-                file2 += filename.Substring(filename.Length-4);
-                try
-                {
-               //     File.Copy(file1, file2);
-
-                    byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
-                   using (FileStream source = new FileStream(file1, FileMode.Open, FileAccess.Read))
-                    {
-                        long fileLength = source.Length;
-                        using (FileStream dest = new FileStream(file2, FileMode.CreateNew, FileAccess.Write))
-                        {
-                            long totalBytes = 0;
-                            int currentBlockSize = 0;
-
-                            while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                totalBytes += currentBlockSize;
-                                double persentage = (double)totalBytes * 100.0 / fileLength;
-
-                                dest.Write(buffer, 0, currentBlockSize);
-
-                              
-                            }
-                        }
-                    }
-                    return file2;
-                }
-                catch
-                {
-                    return "2";
-                }
-            }
-            return ExtCode.ToString();
+            WriteInput("q");     
         }
     }
 }

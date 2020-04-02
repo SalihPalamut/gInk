@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace gInk
@@ -666,12 +667,33 @@ namespace gInk
         }
 
 
-        private void btnTest_Click(object sender, EventArgs e)
+        private async void btnTest_ClickAsync(object sender, EventArgs e)
         {
+            btnTest.Enabled = false;
             FFmpeg a = new FFmpeg();
-            if (txtCommandLinePreview.TextLength > 0)
-                a.test_commands(txtCommandLinePreview.Text);
+            string al = txtCommandLinePreview.Text;
+            Timer b = new Timer();
+            b.Interval = 1000;
+            btnTest.Text = "5";
+            b.Tick += (o,c)=>{
+                btnTest.Text=(int.Parse(btnTest.Text) -1).ToString();
+                if (btnTest.Text == "0")
+                {
+                    btnTest.Text = "Test with CMD";
+                    btnTest.Enabled = true;
+                    b.Stop();
+                }
+               
+            };
+            b.Start();
+            await Task.Run(() =>
+            {
+                if (al.Length > 0)
+                    a.test_commands(al);
+            });
+            
         }
+    
 
         private void btnRefreshSources_Click(object sender, EventArgs e)
         {

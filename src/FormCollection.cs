@@ -53,6 +53,7 @@ namespace gInk
             Root = root;
             InitializeComponent();
 
+            root.RecordTick += Record_Tick;
             PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
             PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;
 
@@ -1376,7 +1377,17 @@ namespace gInk
 
             Root.UndoInk();
         }
-
+        bool a = true;
+        private void Record_Tick(object o, EventArgs e)
+        {
+           
+                if (btPen[6].Name == "Record")
+            {
+                btPen[6].BackgroundImage = a ? image_rec : image_rec_s;
+                a = !a;
+                 
+            }
+        }
         public void btColor_Click(object sender, EventArgs e)
         {
             if (ToolbarMoved)

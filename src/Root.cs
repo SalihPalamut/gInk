@@ -873,26 +873,35 @@ namespace gInk
             FormAbout.Show();
         }
         FFmpeg rec = new FFmpeg();
+        public EventHandler RecordTick;
         public async void OnRecord(object sender, EventArgs e)
         {
+            System.Windows.Forms.Timer b = new System.Windows.Forms.Timer();
+            b.Interval = 250;
 
+            b.Tick += RecordTick; 
+            
             if (rec.IsProcessRunning)
             {
-                recordPath = rec.Stop_Record();
-                if (recordPath.Length > 3)
+                rec.Stop_Record();
+                b.Stop();
+                rec.Saved += (o, a) =>
                 {
-                    isRecord = true;
-                    trayIcon.ShowBalloonTip(300);
-
-                }
+                    recordPath = o.ToString();
+                    if (recordPath.Length > 3)
+                    {
+                        isRecord = true;
+                        trayIcon.ShowBalloonTip(300);
+                    }
+                };
                 trayMenu.MenuItems[0].Text = "Start Record";
             }
             else
             {
+                b.Start();
                 trayMenu.MenuItems[0].Text = "Stop Record";
                 await Task.Run(() =>
                 {
-
                     FFmpegOptions opt = new FFmpegOptions();
                     rec.Record(opt.GetFFmpegArgs());
                 });
