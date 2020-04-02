@@ -63,10 +63,10 @@ namespace gInk
 			ButtonNamePen[0] = "Red";
 			ButtonNamePen[1] = "Green";
 			ButtonNamePen[2] = "Blue";
-			ButtonNamePen[3] = "Colorfull";
+			ButtonNamePen[3] = "Colorful";
 			ButtonNamePen[4] = "Pen 4";
 			ButtonNamePen[5] = "Pen 5";
-			ButtonNamePen[6] = "Pen 6";
+			ButtonNamePen[6] = "Record";
 			ButtonNamePen[7] = "Pen 7";
 			ButtonNamePen[8] = "Pen 8";
 			ButtonNamePen[9] = "Pen 9";

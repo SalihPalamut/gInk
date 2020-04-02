@@ -91,8 +91,8 @@ namespace gInk
 
 			//this.DoubleBuffered = true;
 
-			gpButtonsImage = new Bitmap(2400, 25);
-			gpPenWidthImage = new Bitmap(200, 25);
+			gpButtonsImage = new Bitmap(2400, 43);
+			gpPenWidthImage = new Bitmap(200, 43);
 			TransparentBrush = new SolidBrush(Color.Transparent);
 			SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
 
@@ -179,6 +179,9 @@ namespace gInk
 				if (redrawbuttons)
 					Root.FormCollection.gpPenWidth.DrawToBitmap(gpPenWidthImage, new Rectangle(0, 0, width, height));
 
+				if (height > top)
+					top += 2 * height;
+
 				gCanvus.DrawImage(gpPenWidthImage, left, top);
 				
 			}
@@ -219,7 +222,8 @@ namespace gInk
 				width = Root.FormCollection.gpPenWidth.Width;
 				if (redrawbuttons)
 					Root.FormCollection.gpPenWidth.DrawToBitmap(gpPenWidthImage, new Rectangle(0, 0, width, height));
-
+				if (height > top)
+					top += 2 * height;
 				g.DrawImage(gpPenWidthImage, left, top);
 			}
 		}

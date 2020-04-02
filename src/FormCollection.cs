@@ -20,7 +20,7 @@ namespace gInk
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
         public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
-        public Bitmap image_pointer, image_pointer_act, image_rectange;
+        public Bitmap image_pointer, image_pointer_act, image_rectange,image_rec,image_rec_s;
         public Bitmap[] image_pen;
         public Bitmap[] image_pen_act;
         public Bitmap image_eraser_act, image_eraser;
@@ -58,7 +58,7 @@ namespace gInk
 
             btPen = new Button[Root.MaxPenCount];
 
-            int cumulatedleft = 20, inc_L = 25, size_wh = 25;
+            int cumulatedleft = 30, inc_L = 35, size_wh = 32;
             for (int b = 0; b < Root.MaxPenCount; b++)
             {
                 btPen[b] = new Button();
@@ -76,7 +76,8 @@ namespace gInk
                 btPen[b].BackColor = Root.PenAttr[b].Color;
                 btPen[b].FlatAppearance.MouseDownBackColor = Root.PenAttr[b].Color;
                 btPen[b].FlatAppearance.MouseOverBackColor = Root.PenAttr[b].Color;
-
+                if (b == 3) btPen[b].Name = "Select";
+                if (b == 6) btPen[b].Name = "Record";
                 this.toolTip.SetToolTip(this.btPen[b], Root.Local.ButtonNamePen[b]);
 
                 btPen[b].MouseDown += gpButtons_MouseDown;
@@ -326,6 +327,19 @@ namespace gInk
             g = Graphics.FromImage(image_pencil);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
+
+            image_rec = new Bitmap(btPen[2].Width, btPen[2].Height);
+            g = Graphics.FromImage(image_rec);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.rec_b, 0, 0, btPen[2].Width, btPen[2].Height);
+            
+            image_rec_s = new Bitmap(btPen[2].Width, btPen[2].Height);
+            g = Graphics.FromImage(image_rec_s);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.rec_s, 0, 0, btPen[2].Width, btPen[2].Height);
+
+
+
             image_highlighter = new Bitmap(btPen[2].Width, btPen[2].Height);
             g = Graphics.FromImage(image_highlighter);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -364,18 +378,20 @@ namespace gInk
             image_pen_act = new Bitmap[Root.MaxPenCount];
             for (int b = 0; b < Root.MaxPenCount; b++)
             {
+                if (b == 6)
+                {
+                    image_pen[b] = image_rec;
+                    image_pen_act[b] = image_rec_s;
+                    continue;
+                }
                 if (Root.PenAttr[b].Transparency >= 100)
                 {
-                    image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
                     image_pen[b] = image_highlighter;
-                    image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
                     image_pen_act[b] = image_highlighter_act;
                 }
                 else
                 {
-                    image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
                     image_pen[b] = image_pencil;
-                    image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
                     image_pen_act[b] = image_pencil_act;
                 }
             }
@@ -671,10 +687,10 @@ namespace gInk
                     this.Cursor = System.Windows.Forms.Cursors.Default;
 
                 IC.DefaultDrawingAttributes = Root.PenAttr[pen].Clone();
-                if (Root.PenWidthEnabled)
+                /*if (Root.PenWidthEnabled)
                 {
                     IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
-                }
+                }*/
                 for (int b = 0; b < Root.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
                 btPen[pen].Image = image_pen_act[pen];
@@ -848,6 +864,7 @@ namespace gInk
                 pboxPenWidthIndicator.Left = e.X - pboxPenWidthIndicator.Width / 2;
                 IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
                 Root.UponButtonsUpdate |= 0x2;
+                Root.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
             }
         }
 
@@ -858,6 +875,7 @@ namespace gInk
                 Root.GlobalPenWidth = e.X * e.X / 30;
                 pboxPenWidthIndicator.Left = e.X - pboxPenWidthIndicator.Width / 2;
                 IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
+                Root.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
             }
 
             if (Root.CanvasCursor == 1)
@@ -1175,6 +1193,12 @@ namespace gInk
 
         int IsMovingToolbar = 0;
         Point HitMovingToolbareXY = new Point();
+
+        private void gpPenWidth_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
         bool ToolbarMoved = false;
         private void gpButtons_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1364,7 +1388,12 @@ namespace gInk
             for (int b = 0; b < Root.MaxPenCount; b++)
                 if ((Button)sender == btPen[b])
                 {
-                    if (b == 3)
+                    if (btPen[b].Name == "Record")
+                    {
+                        Root.OnRecord(null, null);
+                        return;
+                    }
+                    if (btPen[b].Name == "Select")
                     {
                         //!Select Cursor
                         SelectPen(-2);
@@ -1382,7 +1411,9 @@ namespace gInk
                         Root.PenAttr[3].Color = PenColor.Color;
                         PenColor.Close();
                     }
-                    SelectPen(b);
+                    
+
+                            SelectPen(b);
                 }
         }
 

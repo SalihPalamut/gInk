@@ -278,6 +278,8 @@
             // cbWidthEnabled
             // 
             this.cbWidthEnabled.AutoSize = true;
+            this.cbWidthEnabled.Checked = true;
+            this.cbWidthEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbWidthEnabled.Location = new System.Drawing.Point(296, 102);
             this.cbWidthEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbWidthEnabled.Name = "cbWidthEnabled";

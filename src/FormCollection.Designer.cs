@@ -65,7 +65,7 @@
             this.gpButtons.Location = new System.Drawing.Point(30, 60);
             this.gpButtons.Margin = new System.Windows.Forms.Padding(2);
             this.gpButtons.Name = "gpButtons";
-            this.gpButtons.Size = new System.Drawing.Size(1035, 33);
+            this.gpButtons.Size = new System.Drawing.Size(1037, 43);
             this.gpButtons.TabIndex = 3;
             this.gpButtons.Paint += new System.Windows.Forms.PaintEventHandler(this.gpButtons_Paint);
             this.gpButtons.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseDown);
@@ -83,7 +83,7 @@
             this.btInkVisible.Location = new System.Drawing.Point(911, 3);
             this.btInkVisible.Margin = new System.Windows.Forms.Padding(2);
             this.btInkVisible.Name = "btInkVisible";
-            this.btInkVisible.Size = new System.Drawing.Size(25, 25);
+            this.btInkVisible.Size = new System.Drawing.Size(32, 32);
             this.btInkVisible.TabIndex = 3;
             this.toolTip.SetToolTip(this.btInkVisible, "Ink visible");
             this.btInkVisible.UseVisualStyleBackColor = true;
@@ -103,7 +103,7 @@
             this.btPan.Location = new System.Drawing.Point(815, 3);
             this.btPan.Margin = new System.Windows.Forms.Padding(2);
             this.btPan.Name = "btPan";
-            this.btPan.Size = new System.Drawing.Size(25, 25);
+            this.btPan.Size = new System.Drawing.Size(32, 32);
             this.btPan.TabIndex = 2;
             this.toolTip.SetToolTip(this.btPan, "Pan");
             this.btPan.UseVisualStyleBackColor = true;
@@ -125,7 +125,7 @@
             this.btDock.Location = new System.Drawing.Point(0, 3);
             this.btDock.Margin = new System.Windows.Forms.Padding(2);
             this.btDock.Name = "btDock";
-            this.btDock.Size = new System.Drawing.Size(19, 25);
+            this.btDock.Size = new System.Drawing.Size(25, 32);
             this.btDock.TabIndex = 0;
             this.toolTip.SetToolTip(this.btDock, "Dock / Undock");
             this.btDock.UseVisualStyleBackColor = false;
@@ -145,7 +145,7 @@
             this.btPenWidth.Location = new System.Drawing.Point(332, 3);
             this.btPenWidth.Margin = new System.Windows.Forms.Padding(2);
             this.btPenWidth.Name = "btPenWidth";
-            this.btPenWidth.Size = new System.Drawing.Size(25, 25);
+            this.btPenWidth.Size = new System.Drawing.Size(32, 32);
             this.btPenWidth.TabIndex = 0;
             this.toolTip.SetToolTip(this.btPenWidth, "Pen width");
             this.btPenWidth.UseVisualStyleBackColor = true;
@@ -165,7 +165,7 @@
             this.btEraser.Location = new System.Drawing.Point(407, 3);
             this.btEraser.Margin = new System.Windows.Forms.Padding(2);
             this.btEraser.Name = "btEraser";
-            this.btEraser.Size = new System.Drawing.Size(25, 25);
+            this.btEraser.Size = new System.Drawing.Size(32, 32);
             this.btEraser.TabIndex = 0;
             this.toolTip.SetToolTip(this.btEraser, "Eraser");
             this.btEraser.UseVisualStyleBackColor = false;
@@ -185,7 +185,7 @@
             this.btSnap.Location = new System.Drawing.Point(587, 3);
             this.btSnap.Margin = new System.Windows.Forms.Padding(2);
             this.btSnap.Name = "btSnap";
-            this.btSnap.Size = new System.Drawing.Size(25, 25);
+            this.btSnap.Size = new System.Drawing.Size(32, 32);
             this.btSnap.TabIndex = 0;
             this.toolTip.SetToolTip(this.btSnap, "Snapshot");
             this.btSnap.UseVisualStyleBackColor = true;
@@ -206,7 +206,7 @@
             this.btPointer.Location = new System.Drawing.Point(478, 3);
             this.btPointer.Margin = new System.Windows.Forms.Padding(2);
             this.btPointer.Name = "btPointer";
-            this.btPointer.Size = new System.Drawing.Size(25, 25);
+            this.btPointer.Size = new System.Drawing.Size(32, 32);
             this.btPointer.TabIndex = 0;
             this.toolTip.SetToolTip(this.btPointer, "Mouse pointer");
             this.btPointer.UseVisualStyleBackColor = true;
@@ -226,7 +226,7 @@
             this.btStop.Location = new System.Drawing.Point(950, 3);
             this.btStop.Margin = new System.Windows.Forms.Padding(2);
             this.btStop.Name = "btStop";
-            this.btStop.Size = new System.Drawing.Size(25, 25);
+            this.btStop.Size = new System.Drawing.Size(32, 32);
             this.btStop.TabIndex = 0;
             this.toolTip.SetToolTip(this.btStop, "Exit drawing");
             this.btStop.UseVisualStyleBackColor = true;
@@ -246,7 +246,7 @@
             this.btClear.Location = new System.Drawing.Point(728, 3);
             this.btClear.Margin = new System.Windows.Forms.Padding(2);
             this.btClear.Name = "btClear";
-            this.btClear.Size = new System.Drawing.Size(25, 25);
+            this.btClear.Size = new System.Drawing.Size(32, 32);
             this.btClear.TabIndex = 1;
             this.toolTip.SetToolTip(this.btClear, "Clear");
             this.btClear.UseVisualStyleBackColor = true;
@@ -266,7 +266,7 @@
             this.btUndo.Location = new System.Drawing.Point(657, 3);
             this.btUndo.Margin = new System.Windows.Forms.Padding(2);
             this.btUndo.Name = "btUndo";
-            this.btUndo.Size = new System.Drawing.Size(25, 25);
+            this.btUndo.Size = new System.Drawing.Size(32, 32);
             this.btUndo.TabIndex = 1;
             this.toolTip.SetToolTip(this.btUndo, "Undo");
             this.btUndo.UseVisualStyleBackColor = true;
@@ -284,12 +284,13 @@
             // 
             this.gpPenWidth.BackColor = System.Drawing.Color.WhiteSmoke;
             this.gpPenWidth.BackgroundImage = global::gInk.Properties.Resources.penwidthpanel;
-            this.gpPenWidth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.gpPenWidth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.gpPenWidth.Controls.Add(this.pboxPenWidthIndicator);
-            this.gpPenWidth.Location = new System.Drawing.Point(145, 272);
+            this.gpPenWidth.Location = new System.Drawing.Point(457, 182);
             this.gpPenWidth.Name = "gpPenWidth";
-            this.gpPenWidth.Size = new System.Drawing.Size(250, 67);
+            this.gpPenWidth.Size = new System.Drawing.Size(262, 51);
             this.gpPenWidth.TabIndex = 4;
+            this.gpPenWidth.Paint += new System.Windows.Forms.PaintEventHandler(this.gpPenWidth_Paint);
             this.gpPenWidth.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gpPenWidth_MouseDown);
             this.gpPenWidth.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gpPenWidth_MouseMove);
             this.gpPenWidth.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gpPenWidth_MouseUp);

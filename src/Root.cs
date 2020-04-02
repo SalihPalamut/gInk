@@ -55,7 +55,7 @@ namespace gInk
         public bool[] PenEnabled = new bool[MaxPenCount];
         public bool EraserEnabled = true;
         public bool PointerEnabled = true;
-        public bool PenWidthEnabled = false;
+        public bool PenWidthEnabled = true;
         public bool SnapEnabled = true;
         public bool UndoEnabled = true;
         public bool ClearEnabled = true;
@@ -398,6 +398,7 @@ namespace gInk
             PenAttr[3].Color = Color.FromArgb(0, 0, 0);
             PenAttr[3].Width = 80;
             PenAttr[3].Transparency = 0;
+         
 
             PenEnabled[4] = true;
             PenAttr[4] = new DrawingAttributes();
@@ -411,6 +412,7 @@ namespace gInk
             PenAttr[5].Width = 500;
             PenAttr[5].Transparency = 175;
 
+            PenEnabled[6] = true;
             PenAttr[6] = new DrawingAttributes();
             PenAttr[6].Color = Color.FromArgb(230, 230, 230);
             PenAttr[6].Width = 80;
@@ -871,7 +873,7 @@ namespace gInk
             FormAbout.Show();
         }
         FFmpeg rec = new FFmpeg();
-        private async void OnRecord(object sender, EventArgs e)
+        public async void OnRecord(object sender, EventArgs e)
         {
 
             if (rec.IsProcessRunning)
