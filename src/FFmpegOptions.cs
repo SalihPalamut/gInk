@@ -37,11 +37,9 @@ namespace gInk
         public const int mp3_max = 9;
 
         public delegate void EncodeStartedEventHandler();
-        
 
         public delegate void EncodeProgressChangedEventHandler(float percentage);
     
-
         // General
         public bool OverrideCLIPath { get; set; } = false;
         public string CLIPath { get; set; } = "";
@@ -142,10 +140,7 @@ namespace gInk
         {
             lock (this)
             {
-
-                string tempFilePath = Directory.GetCurrentDirectory() + "\\a.json";
-
-                using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                using (FileStream fileStream = new FileStream(SavePath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 using (StreamWriter streamWriter = new StreamWriter(fileStream))
                 using (JsonTextWriter jsonWriter = new JsonTextWriter(streamWriter))
                 {
@@ -157,7 +152,6 @@ namespace gInk
                     serializer.Serialize(jsonWriter, this);
                     jsonWriter.Flush();
                 }
-
             }
         }
 
@@ -172,8 +166,6 @@ namespace gInk
         }
         [DllImport("gdi32.dll")]
         static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
-   
-
 
         private CaptureArea getScreenSize()
         {
@@ -189,19 +181,12 @@ namespace gInk
         }
         public FFmpegOptions()
         {
-
-          
-
-            string tempFilePath = Directory.GetCurrentDirectory() + "\\a.json";
-            if (!File.Exists(tempFilePath))
+            if (!File.Exists(SavePath))
             {
-
                 CaptureArea = getScreenSize();
                 save();
-                //return;
             }
-
-            using (StreamReader streamReader = new StreamReader(tempFilePath))
+            using (StreamReader streamReader = new StreamReader(SavePath))
             using (FFmpegOptions options = JsonConvert.DeserializeObject<FFmpegOptions>(streamReader.ReadToEnd()))
             {
                 foreach (var property in typeof(FFmpegOptions).GetProperties())
@@ -221,8 +206,8 @@ namespace gInk
         public float Duration { get; set; }
         public bool IsRecording=true, DrawCursor=true, IsLossless=false;
         public int FPS { get; set; } = 30;
-        public CaptureArea CaptureArea { get; set; } 
-        
+        public CaptureArea CaptureArea { get; set; }
+        private string SavePath = Directory.GetCurrentDirectory() + @"\Settings\FFmpeg.json";
         public string GetFFmpegArgs(bool isCustom = false)
         {
             if (IsRecording && !IsVideoSourceSelected && !IsAudioSourceSelected)
@@ -442,6 +427,7 @@ namespace gInk
             Width = width;
             Height = height;
         }
+        
     }
 
     internal class WritablePropertiesOnlyResolver : DefaultContractResolver
@@ -452,4 +438,5 @@ namespace gInk
             return props.Where(p => p.Writable).ToList();
         }
     }
+   
 }

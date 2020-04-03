@@ -15,7 +15,7 @@ namespace gInk
     {
         public Root Root;
         public InkOverlay IC;
-
+        gInkOptions gInkOptions;
         public Button[] btPen;
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
@@ -52,20 +52,63 @@ namespace gInk
         {
             Root = root;
             InitializeComponent();
-
+            gInkOptions = new gInkOptions();
             root.RecordTick += Record_Tick;
             PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
             PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;
+            gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * gInkOptions.ToolbarSize);
+            double size_fact = 0.85,top_fact=0.08;
+            int set_height = (int)(gpButtons.Height * size_fact);
+            int set_top= (int)(gpButtons.Height * top_fact);
+            btClear.Height = set_height;
+            btClear.Width = btClear.Height;
+            btClear.Top = set_top;
 
-            btPen = new Button[Root.MaxPenCount];
+            btDock.Height = set_height;
+            btDock.Width = btDock.Height / 2;
+            btDock.Top = set_top;
 
-            int cumulatedleft = 30, inc_L = 35, size_wh = 32;
-            for (int b = 0; b < Root.MaxPenCount; b++)
+            btEraser.Height = set_height;
+            btEraser.Width = btEraser.Height;
+            btEraser.Top = set_top;
+
+            btInkVisible.Height = set_height;
+            btInkVisible.Width = btInkVisible.Height;
+            btInkVisible.Top = set_top;
+
+            btPan.Height = set_height;
+            btPan.Width = btPan.Height;
+            btPan.Top = set_top;
+
+            btPointer.Height = set_height;
+            btPointer.Width = btPointer.Height;
+            btPointer.Top = set_top;
+
+            btSnap.Height = set_height;
+            btSnap.Width = btSnap.Height;
+            btSnap.Top = set_top;
+
+            btStop.Height = set_height;
+            btStop.Width = btStop.Height;
+            btStop.Top = set_top;
+
+            btUndo.Height = set_height;
+            btUndo.Width = btUndo.Height;
+            btUndo.Top = set_top;
+
+            btPenWidth.Height = set_height;
+            btPenWidth.Width = btPenWidth.Height;
+            btPenWidth.Top = set_top;
+
+            btPen = new Button[gInkOptions.MaxPenCount];
+
+            int cumulatedleft = (int)(btDock.Width * 2.5), inc_L = (int)(set_height * 1.1);
+            for (int b = 0; b < gInkOptions.MaxPenCount; b++)
             {
                 btPen[b] = new Button();
-                btPen[b].Width = size_wh;
-                btPen[b].Height = size_wh;
-                btPen[b].Top = 2;
+                btPen[b].Width = set_height;
+                btPen[b].Height = set_height;
+                btPen[b].Top = set_top;
                 btPen[b].FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
                 btPen[b].FlatAppearance.BorderSize = 3;
                 btPen[b].FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(250, 50, 50);
@@ -74,9 +117,9 @@ namespace gInk
                 //btPen[b].Name = "btPen" + b.ToString();
                 btPen[b].UseVisualStyleBackColor = false;
                 btPen[b].Click += new System.EventHandler(this.btColor_Click);
-                btPen[b].BackColor = Root.PenAttr[b].Color;
-                btPen[b].FlatAppearance.MouseDownBackColor = Root.PenAttr[b].Color;
-                btPen[b].FlatAppearance.MouseOverBackColor = Root.PenAttr[b].Color;
+                btPen[b].BackColor = gInkOptions.PenAttr[b].Color;
+                btPen[b].FlatAppearance.MouseDownBackColor = gInkOptions.PenAttr[b].Color;
+                btPen[b].FlatAppearance.MouseOverBackColor = gInkOptions.PenAttr[b].Color;
                 if (b == 3) btPen[b].Name = "Select";
                 if (b == 6) btPen[b].Name = "Record";
                 this.toolTip.SetToolTip(this.btPen[b], Root.Local.ButtonNamePen[b]);
@@ -87,7 +130,7 @@ namespace gInk
 
                 gpButtons.Controls.Add(btPen[b]);
 
-                if (Root.PenEnabled[b])
+                if (gInkOptions.PenEnabled[b])
                 {
                     btPen[b].Visible = true;
                     btPen[b].Left = cumulatedleft;
@@ -99,7 +142,7 @@ namespace gInk
                 }
             }
             cumulatedleft += inc_L;
-            if (Root.EraserEnabled)
+            if (gInkOptions.EraserEnabled)
             {
                 btEraser.Visible = true;
                 btEraser.Left = cumulatedleft;
@@ -109,7 +152,7 @@ namespace gInk
             {
                 btEraser.Visible = false;
             }
-            if (Root.PanEnabled)
+            if (gInkOptions.PanEnabled)
             {
                 btPan.Visible = true;
                 btPan.Left = cumulatedleft;
@@ -119,7 +162,7 @@ namespace gInk
             {
                 btPan.Visible = false;
             }
-            if (Root.PointerEnabled)
+            if (gInkOptions.PointerEnabled)
             {
                 btPointer.Visible = true;
                 btPointer.Left = cumulatedleft;
@@ -130,7 +173,7 @@ namespace gInk
                 btPointer.Visible = false;
             }
             cumulatedleft += inc_L;
-            if (Root.PenWidthEnabled)
+            if (gInkOptions.PenWidthEnabled)
             {
                 btPenWidth.Visible = true;
                 btPenWidth.Left = cumulatedleft;
@@ -140,7 +183,7 @@ namespace gInk
             {
                 btPenWidth.Visible = false;
             }
-            if (Root.InkVisibleEnabled)
+            if (gInkOptions.InkVisibleEnabled)
             {
                 btInkVisible.Visible = true;
                 btInkVisible.Left = cumulatedleft;
@@ -150,7 +193,7 @@ namespace gInk
             {
                 btInkVisible.Visible = false;
             }
-            if (Root.SnapEnabled)
+            if (gInkOptions.SnapEnabled)
             {
                 btSnap.Visible = true;
                 btSnap.Left = cumulatedleft;
@@ -160,7 +203,7 @@ namespace gInk
             {
                 btSnap.Visible = false;
             }
-            if (Root.UndoEnabled)
+            if (gInkOptions.UndoEnabled)
             {
                 btUndo.Visible = true;
                 btUndo.Left = cumulatedleft;
@@ -170,7 +213,7 @@ namespace gInk
             {
                 btUndo.Visible = false;
             }
-            if (Root.ClearEnabled)
+            if (gInkOptions.ClearEnabled)
             {
                 btClear.Visible = true;
                 btClear.Left = cumulatedleft;
@@ -180,8 +223,9 @@ namespace gInk
             {
                 btClear.Visible = false;
             }
-            btStop.Left = cumulatedleft + 20;
-            gpButtons.Width = btStop.Right + 20;
+            cumulatedleft += (int)(btDock.Width * 1.5);
+            btStop.Left = cumulatedleft;
+            gpButtons.Width = btStop.Right + btDock.Width;
 
 
             this.Left = SystemInformation.VirtualScreen.Left;
@@ -201,7 +245,7 @@ namespace gInk
 
             gpButtonsWidth = gpButtons.Width;
             gpButtonsHeight = gpButtons.Height;
-            if (true || Root.AllowDraggingToolbar)
+            if (true || gInkOptions.AllowDraggingToolbar)
             {
                 gpButtonsLeft = Root.gpButtonsLeft;
                 gpButtonsTop = Root.gpButtonsTop;
@@ -375,9 +419,9 @@ namespace gInk
             g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0, btPointer.Width, btPointer.Height);
 
 
-            image_pen = new Bitmap[Root.MaxPenCount];
-            image_pen_act = new Bitmap[Root.MaxPenCount];
-            for (int b = 0; b < Root.MaxPenCount; b++)
+            image_pen = new Bitmap[gInkOptions.MaxPenCount];
+            image_pen_act = new Bitmap[gInkOptions.MaxPenCount];
+            for (int b = 0; b < gInkOptions.MaxPenCount; b++)
             {
                 if (b == 6)
                 {
@@ -385,7 +429,7 @@ namespace gInk
                     image_pen_act[b] = image_rec_s;
                     continue;
                 }
-                if (Root.PenAttr[b].Transparency >= 100)
+                if (gInkOptions.PenAttr[b].Transparency >= 100)
                 {
                     image_pen[b] = image_highlighter;
                     image_pen_act[b] = image_highlighter_act;
@@ -636,7 +680,7 @@ namespace gInk
             // -3=pan, -2=pointer, -1=erasor, 0+=pens
             if (pen == -3)
             {
-                for (int b = 0; b < Root.MaxPenCount; b++)
+                for (int b = 0; b < gInkOptions.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
@@ -649,7 +693,7 @@ namespace gInk
             }
             else if (pen == -2)
             {
-                for (int b = 0; b < Root.MaxPenCount; b++)
+                for (int b = 0; b < gInkOptions.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer_act;
@@ -663,7 +707,7 @@ namespace gInk
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
 
-                for (int b = 0; b < Root.MaxPenCount; b++)
+                for (int b = 0; b < gInkOptions.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
                 btEraser.Image = image_eraser_act;
                 btPointer.Image = image_pointer;
@@ -672,12 +716,12 @@ namespace gInk
                 Root.UnPointer();
                 Root.PanMode = false;
 
-                if (Root.CanvasCursor == 0)
+                if (gInkOptions.CanvasCursor == 0)
                 {
                     cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
                     IC.Cursor = cursorred;
                 }
-                else if (Root.CanvasCursor == 1)
+                else if (gInkOptions.CanvasCursor == 1)
                     SetPenTipCursor();
 
                 IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
@@ -687,12 +731,12 @@ namespace gInk
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
 
-                IC.DefaultDrawingAttributes = Root.PenAttr[pen].Clone();
+                IC.DefaultDrawingAttributes = gInkOptions.PenAttr[pen].Clone();
                 /*if (Root.PenWidthEnabled)
                 {
                     IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
                 }*/
-                for (int b = 0; b < Root.MaxPenCount; b++)
+                for (int b = 0; b < gInkOptions.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
                 btPen[pen].Image = image_pen_act[pen];
                 btEraser.Image = image_eraser;
@@ -702,12 +746,12 @@ namespace gInk
                 Root.UnPointer();
                 Root.PanMode = false;
 
-                if (Root.CanvasCursor == 0)
+                if (gInkOptions.CanvasCursor == 0)
                 {
                     cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
                     IC.Cursor = cursorred;
                 }
-                else if (Root.CanvasCursor == 1)
+                else if (gInkOptions.CanvasCursor == 1)
                     SetPenTipCursor();
 
                 IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
@@ -730,7 +774,7 @@ namespace gInk
             ToThrough();
             Root.ClearInk();
             SaveUndoStrokes();
-            Root.SaveOptions("config.ini");
+            gInkOptions.Save();
             Root.gpPenWidthVisible = false;
 
             LastTickTime = DateTime.Now;
@@ -865,7 +909,7 @@ namespace gInk
                 pboxPenWidthIndicator.Left = e.X - pboxPenWidthIndicator.Width / 2;
                 IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
                 Root.UponButtonsUpdate |= 0x2;
-                Root.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
+                gInkOptions.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
             }
         }
 
@@ -876,10 +920,10 @@ namespace gInk
                 Root.GlobalPenWidth = e.X * e.X / 30;
                 pboxPenWidthIndicator.Left = e.X - pboxPenWidthIndicator.Width / 2;
                 IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
-                Root.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
+                gInkOptions.PenAttr[Root.LastPen].Width = Root.GlobalPenWidth;
             }
 
-            if (Root.CanvasCursor == 1)
+            if (gInkOptions.CanvasCursor == 1)
                 SetPenTipCursor();
 
             Root.gpPenWidthVisible = false;
@@ -909,7 +953,7 @@ namespace gInk
 
         private void pboxPenWidthIndicator_MouseUp(object sender, MouseEventArgs e)
         {
-            if (Root.CanvasCursor == 1)
+            if (gInkOptions.CanvasCursor == 1)
                 SetPenTipCursor();
 
             Root.gpPenWidthVisible = false;
@@ -1097,39 +1141,42 @@ namespace gInk
             }
 
 
-            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0)
+            if (!Root.FingerInAction && (!Root.PointerMode || gInkOptions.AllowHotkeyInPointerMode) && Root.Snapping <= 0)
             {
                 bool control = ((short)(GetKeyState(VK_LCONTROL) | GetKeyState(VK_RCONTROL)) & 0x8000) == 0x8000;
                 bool alt = ((short)(GetKeyState(VK_LMENU) | GetKeyState(VK_RMENU)) & 0x8000) == 0x8000;
                 bool shift = ((short)(GetKeyState(VK_LSHIFT) | GetKeyState(VK_RSHIFT)) & 0x8000) == 0x8000;
                 bool win = ((short)(GetKeyState(VK_LWIN) | GetKeyState(VK_RWIN)) & 0x8000) == 0x8000;
 
-                for (int p = 0; p < Root.MaxPenCount; p++)
+                for (int p = 0; p < gInkOptions.MaxPenCount; p++)
                 {
-                    pressed = (GetKeyState(Root.Hotkey_Pens[p].Key) & 0x8000) == 0x8000;
-                    if (pressed && !LastPenStatus[p] && Root.Hotkey_Pens[p].ModifierMatch(control, alt, shift, win))
+                    pressed = (GetKeyState(gInkOptions.Hotkey_Pens[p].Key) & 0x8000) == 0x8000;
+                    if (pressed && !LastPenStatus[p] && gInkOptions.Hotkey_Pens[p].ModifierMatch(control, alt, shift, win))
                     {
+                        if (btPen[p].Name == "Select" || btPen[p].Name == "Record")
+                            btColor_Click(btPen[p], null);
+                        else
                         SelectPen(p);
                     }
                     LastPenStatus[p] = pressed;
                 }
 
-                pressed = (GetKeyState(Root.Hotkey_Eraser.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastEraserStatus && Root.Hotkey_Eraser.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Eraser.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastEraserStatus && gInkOptions.Hotkey_Eraser.ModifierMatch(control, alt, shift, win))
                 {
                     SelectPen(-1);
                 }
                 LastEraserStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_InkVisible.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastVisibleStatus && Root.Hotkey_InkVisible.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_InkVisible.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastVisibleStatus && gInkOptions.Hotkey_InkVisible.ModifierMatch(control, alt, shift, win))
                 {
                     btInkVisible_Click(null, null);
                 }
                 LastVisibleStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Undo.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastUndoStatus && Root.Hotkey_Undo.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Undo.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastUndoStatus && gInkOptions.Hotkey_Undo.ModifierMatch(control, alt, shift, win))
                 {
                     if (!Root.InkVisible)
                         Root.SetInkVisible(true);
@@ -1138,36 +1185,36 @@ namespace gInk
                 }
                 LastUndoStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Redo.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastRedoStatus && Root.Hotkey_Redo.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Redo.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastRedoStatus && gInkOptions.Hotkey_Redo.ModifierMatch(control, alt, shift, win))
                 {
                     Root.RedoInk();
                 }
                 LastRedoStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Pointer.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastPointerStatus && Root.Hotkey_Pointer.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Pointer.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastPointerStatus && gInkOptions.Hotkey_Pointer.ModifierMatch(control, alt, shift, win))
                 {
                     SelectPen(-2);
                 }
                 LastPointerStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Pan.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastPanStatus && Root.Hotkey_Pan.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Pan.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastPanStatus && gInkOptions.Hotkey_Pan.ModifierMatch(control, alt, shift, win))
                 {
                     SelectPen(-3);
                 }
                 LastPanStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Clear.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Clear.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Clear.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && gInkOptions.Hotkey_Clear.ModifierMatch(control, alt, shift, win))
                 {
                     btClear_Click(null, null);
                 }
                 LastClearStatus = pressed;
 
-                pressed = (GetKeyState(Root.Hotkey_Snap.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastSnapStatus && Root.Hotkey_Snap.ModifierMatch(control, alt, shift, win))
+                pressed = (GetKeyState(gInkOptions.Hotkey_Snap.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastSnapStatus && gInkOptions.Hotkey_Snap.ModifierMatch(control, alt, shift, win))
                 {
                     btSnap_Click(null, null);
                 }
@@ -1203,7 +1250,7 @@ namespace gInk
         bool ToolbarMoved = false;
         private void gpButtons_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!Root.AllowDraggingToolbar)
+            if (!gInkOptions.AllowDraggingToolbar)
                 return;
             if (ButtonsEntering != 0)
                 return;
@@ -1396,7 +1443,7 @@ namespace gInk
                 return;
             }
 
-            for (int b = 0; b < Root.MaxPenCount; b++)
+            for (int b = 0; b < gInkOptions.MaxPenCount; b++)
                 if ((Button)sender == btPen[b])
                 {
                     if (btPen[b].Name == "Record")
@@ -1415,11 +1462,11 @@ namespace gInk
                             top -= PenColor.Height;
                         PenColor.Location = new Point(gpButtons.Left, top);
                         PenColor.ActionAfterColorSelected = ThemeColorPickerWindow.Action.HideWindow;
-                        PenColor.Color = Root.PenAttr[3].Color;
+                        PenColor.Color = gInkOptions.PenAttr[3].Color;
                         PenColor.ShowDialog();
                         //!Change Color
                         ((Button)sender).BackColor = PenColor.Color;
-                        Root.PenAttr[3].Color = PenColor.Color;
+                        gInkOptions.PenAttr[3].Color = PenColor.Color;
                         PenColor.Close();
                     }
                     

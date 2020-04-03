@@ -30,7 +30,7 @@ namespace gInk
 
 		byte[] screenbits;
 		byte[] lastscreenbits;
-
+		gInkOptions gInkOptions;
 		// http://www.csharp411.com/hide-form-from-alttab/
 		protected override CreateParams CreateParams
 		{
@@ -47,7 +47,7 @@ namespace gInk
 		{
 			Root = root;
 			InitializeComponent();
-
+			gInkOptions = new gInkOptions();
 			this.Left = SystemInformation.VirtualScreen.Left;
 			this.Top = SystemInformation.VirtualScreen.Top;
 			//int targetbottom = 0;
@@ -91,8 +91,9 @@ namespace gInk
 
 			//this.DoubleBuffered = true;
 
-			gpButtonsImage = new Bitmap(2400, 43);
-			gpPenWidthImage = new Bitmap(200, 43);
+			int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * gInkOptions.ToolbarSize);
+			gpButtonsImage = new Bitmap(2400, gpheight);
+			gpPenWidthImage = new Bitmap(200, gpheight);
 			TransparentBrush = new SolidBrush(Color.Transparent);
 			SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
 
@@ -295,9 +296,9 @@ namespace gInk
 
 		public void SnapShot(Rectangle rect)
 		{
-			string snapbasepath = Root.SnapshotBasePath;
+			string snapbasepath = gInkOptions.SnapshotBasePath;
 			snapbasepath = Environment.ExpandEnvironmentVariables(snapbasepath);
-			if (Root.SnapshotBasePath == "%USERPROFILE%/Pictures/gInk/")
+			if (gInkOptions.SnapshotBasePath == "%USERPROFILE%/Pictures/gInk/")
 				if (!System.IO.Directory.Exists(snapbasepath))
 					System.IO.Directory.CreateDirectory(snapbasepath);
 

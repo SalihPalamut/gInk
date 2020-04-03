@@ -50,7 +50,6 @@
             this.tbSnapPath = new System.Windows.Forms.TextBox();
             this.lbSnapshotsavepath = new System.Windows.Forms.Label();
             this.btSnapPath = new System.Windows.Forms.Button();
-            this.lbNote = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lbCanvascursor = new System.Windows.Forms.Label();
@@ -164,6 +163,8 @@
             this.gbFFmpegExe = new System.Windows.Forms.GroupBox();
             this.btnDownload = new System.Windows.Forms.Button();
             this.ffmpeg_path = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.toolbar_size = new System.Windows.Forms.NumericUpDown();
             this.hiInkVisible = new gInk.HotkeyInputBox();
             this.hiSnapshot = new gInk.HotkeyInputBox();
             this.hiClear = new gInk.HotkeyInputBox();
@@ -218,6 +219,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudQSVBitrate)).BeginInit();
             this.gbSource.SuspendLayout();
             this.gbFFmpegExe.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toolbar_size)).BeginInit();
             this.SuspendLayout();
             // 
             // cbEraserEnabled
@@ -329,16 +331,6 @@
             this.btSnapPath.UseVisualStyleBackColor = true;
             this.btSnapPath.Click += new System.EventHandler(this.btSnapPath_Click);
             // 
-            // lbNote
-            // 
-            this.lbNote.AutoSize = true;
-            this.lbNote.Location = new System.Drawing.Point(12, 393);
-            this.lbNote.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbNote.Name = "lbNote";
-            this.lbNote.Size = new System.Drawing.Size(418, 17);
-            this.lbNote.TabIndex = 4;
-            this.lbNote.Text = "Note: pen width panel overides each individual pen width settings";
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -388,6 +380,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage1.Controls.Add(this.toolbar_size);
+            this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.lbLanguage);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.comboLanguage);
@@ -397,7 +391,6 @@
             this.tabPage1.Controls.Add(this.cbEraserEnabled);
             this.tabPage1.Controls.Add(this.lbCanvascursor);
             this.tabPage1.Controls.Add(this.cbWidthEnabled);
-            this.tabPage1.Controls.Add(this.lbNote);
             this.tabPage1.Controls.Add(this.cbPointerEnabled);
             this.tabPage1.Controls.Add(this.btSnapPath);
             this.tabPage1.Controls.Add(this.cbSnapEnabled);
@@ -1113,7 +1106,7 @@
             this.tbOpusBitrate.Maximum = 16;
             this.tbOpusBitrate.Minimum = 1;
             this.tbOpusBitrate.Name = "tbOpusBitrate";
-            this.tbOpusBitrate.Size = new System.Drawing.Size(263, 56);
+            this.tbOpusBitrate.Size = new System.Drawing.Size(263, 81);
             this.tbOpusBitrate.TabIndex = 3;
             this.tbOpusBitrate.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tbOpusBitrate.Value = 4;
@@ -1152,7 +1145,7 @@
             this.tbVorbis_qscale.Location = new System.Drawing.Point(141, 4);
             this.tbVorbis_qscale.Margin = new System.Windows.Forms.Padding(4);
             this.tbVorbis_qscale.Name = "tbVorbis_qscale";
-            this.tbVorbis_qscale.Size = new System.Drawing.Size(263, 56);
+            this.tbVorbis_qscale.Size = new System.Drawing.Size(263, 81);
             this.tbVorbis_qscale.TabIndex = 1;
             this.tbVorbis_qscale.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tbVorbis_qscale.Value = 3;
@@ -1192,7 +1185,7 @@
             this.tbMP3_qscale.Margin = new System.Windows.Forms.Padding(4);
             this.tbMP3_qscale.Maximum = 9;
             this.tbMP3_qscale.Name = "tbMP3_qscale";
-            this.tbMP3_qscale.Size = new System.Drawing.Size(263, 56);
+            this.tbMP3_qscale.Size = new System.Drawing.Size(263, 81);
             this.tbMP3_qscale.TabIndex = 1;
             this.tbMP3_qscale.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tbMP3_qscale.Value = 5;
@@ -1798,6 +1791,39 @@
             this.ffmpeg_path.TabIndex = 3;
             this.ffmpeg_path.Text = "label1";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 126);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 17);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Toolbar Size";
+            // 
+            // toolbar_size
+            // 
+            this.toolbar_size.Location = new System.Drawing.Point(236, 121);
+            this.toolbar_size.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.toolbar_size.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.toolbar_size.Name = "toolbar_size";
+            this.toolbar_size.Size = new System.Drawing.Size(52, 22);
+            this.toolbar_size.TabIndex = 10;
+            this.toolbar_size.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.toolbar_size.ValueChanged += new System.EventHandler(this.toolbar_size_ValueChanged);
+            // 
             // hiInkVisible
             // 
             this.hiInkVisible.BackColor = System.Drawing.Color.White;
@@ -2017,6 +2043,7 @@
             this.gbSource.PerformLayout();
             this.gbFFmpegExe.ResumeLayout(false);
             this.gbFFmpegExe.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toolbar_size)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2034,7 +2061,6 @@
 		private System.Windows.Forms.TextBox tbSnapPath;
 		private System.Windows.Forms.Label lbSnapshotsavepath;
 		private System.Windows.Forms.Button btSnapPath;
-		private System.Windows.Forms.Label lbNote;
 		private System.Windows.Forms.ColorDialog colorDialog1;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.Label lbCanvascursor;
@@ -2157,5 +2183,7 @@
         private System.Windows.Forms.CheckBox watermark_use;
         private System.Windows.Forms.GroupBox gbCommandLineArgs;
         private System.Windows.Forms.TextBox tbUserArgs;
+        private System.Windows.Forms.NumericUpDown toolbar_size;
+        private System.Windows.Forms.Label label5;
     }
 }
