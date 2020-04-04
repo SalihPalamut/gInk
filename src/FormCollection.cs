@@ -21,7 +21,7 @@ namespace gInk
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
         public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
-        public Bitmap image_pointer, image_pointer_act, image_rectange,image_rec,image_rec_s;
+        public Bitmap image_pointer, image_pointer_act, image_rectange,image_rec;
         public Bitmap[] image_pen;
         public Bitmap[] image_pen_act;
         public Bitmap image_eraser_act, image_eraser;
@@ -111,20 +111,21 @@ namespace gInk
                 btPen[b].Width = set_height;
                 btPen[b].Height = set_height;
                 btPen[b].Top = set_top;
-                btPen[b].FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+                btPen[b].FlatAppearance.BorderColor = Color.WhiteSmoke;
                 btPen[b].FlatAppearance.BorderSize = 3;
-                btPen[b].FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(250, 50, 50);
-                btPen[b].FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                btPen[b].ForeColor = System.Drawing.Color.Transparent;
+                btPen[b].FlatAppearance.MouseOverBackColor = Color.FromArgb(250, 50, 50);
+                btPen[b].FlatStyle = FlatStyle.Flat;
+                btPen[b].ForeColor = Color.Transparent;
                 //btPen[b].Name = "btPen" + b.ToString();
                 btPen[b].UseVisualStyleBackColor = false;
-                btPen[b].Click += new System.EventHandler(this.btColor_Click);
+                btPen[b].Click += new EventHandler(this.btColor_Click);
                 btPen[b].BackColor = gInkOptions.PenAttr[b].Color;
                 btPen[b].FlatAppearance.MouseDownBackColor = gInkOptions.PenAttr[b].Color;
                 btPen[b].FlatAppearance.MouseOverBackColor = gInkOptions.PenAttr[b].Color;
                 if (b == 3) btPen[b].Name = "Select";
                 if (b == 6) btPen[b].Name = "Record";
                 this.toolTip.SetToolTip(this.btPen[b], Language.ButtonNamePen[b]);
+                btPen[b].BackgroundImageLayout= ImageLayout.Stretch;
 
                 btPen[b].MouseDown += gpButtons_MouseDown;
                 btPen[b].MouseMove += gpButtons_MouseMove;
@@ -247,8 +248,8 @@ namespace gInk
 
             gpButtonsWidth = gpButtons.Width;
             gpButtonsHeight = gpButtons.Height;
-            if (true || gInkOptions.AllowDraggingToolbar)
-            {
+          /*  if (true || gInkOptions.AllowDraggingToolbar)
+            {*/
                 gpButtonsLeft = Root.gpButtonsLeft;
                 gpButtonsTop = Root.gpButtonsTop;
                 if
@@ -264,12 +265,12 @@ namespace gInk
                     gpButtonsLeft = Screen.PrimaryScreen.WorkingArea.Right - gpButtons.Width + PrimaryLeft;
                     gpButtonsTop = Screen.PrimaryScreen.WorkingArea.Bottom - gpButtons.Height - 15 + PrimaryTop;
                 }
-            }
+         /*   }
             else
             {
                 gpButtonsLeft = Screen.PrimaryScreen.WorkingArea.Right - gpButtons.Width + PrimaryLeft;
                 gpButtonsTop = Screen.PrimaryScreen.WorkingArea.Bottom - gpButtons.Height - 15 + PrimaryTop;
-            }
+            }*/
 
             gpButtons.Left = gpButtonsLeft + gpButtons.Width;
             gpButtons.Top = gpButtonsTop;
@@ -375,26 +376,22 @@ namespace gInk
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
 
+           
             image_rec = new Bitmap(btPen[2].Width, btPen[2].Height);
             g = Graphics.FromImage(image_rec);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.rec_b, 0, 0, btPen[2].Width, btPen[2].Height);
             
-            image_rec_s = new Bitmap(btPen[2].Width, btPen[2].Height);
-            g = Graphics.FromImage(image_rec_s);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(global::gInk.Properties.Resources.rec_s, 0, 0, btPen[2].Width, btPen[2].Height);
-
-
-
             image_highlighter = new Bitmap(btPen[2].Width, btPen[2].Height);
             g = Graphics.FromImage(image_highlighter);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.highlighter, 0, 0, btPen[2].Width, btPen[2].Height);
+            
             image_pencil_act = new Bitmap(btPen[2].Width, btPen[2].Height);
             g = Graphics.FromImage(image_pencil_act);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInk.Properties.Resources.pencil_act, 0, 0, btPen[2].Width, btPen[2].Height);
+          
             image_highlighter_act = new Bitmap(btPen[2].Width, btPen[2].Height);
             g = Graphics.FromImage(image_highlighter_act);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -428,7 +425,6 @@ namespace gInk
                 if (b == 6)
                 {
                     image_pen[b] = image_rec;
-                    image_pen_act[b] = image_rec_s;
                     continue;
                 }
                 if (gInkOptions.PenAttr[b].Transparency >= 100)
@@ -1429,12 +1425,11 @@ namespace gInk
         bool a = true;
         private void Record_Tick(object o, EventArgs e)
         {
-           
                 if (btPen[6].Name == "Record")
             {
-                btPen[6].BackgroundImage = a ? image_rec : image_rec_s;
+                btPen[6].BackColor = a ? Color.White : Color.Red;
                 a = !a;
-                 
+                Root.UponButtonsUpdate |= 0x2;
             }
         }
         public void btColor_Click(object sender, EventArgs e)

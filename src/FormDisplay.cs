@@ -62,8 +62,9 @@ namespace gInk
 			this.Width = SystemInformation.VirtualScreen.Width;
 			this.Height = SystemInformation.VirtualScreen.Height - 2;
 
-			Bitmap InitCanvus = new Bitmap(this.Width, this.Height);
-			Canvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
+				Bitmap InitCanvus = new Bitmap(this.Width, this.Height);
+
+		   Canvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 			OneStrokeCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 			//BlankCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 
@@ -91,7 +92,9 @@ namespace gInk
 
 			//this.DoubleBuffered = true;
 
-			int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * gInkOptions.ToolbarSize);
+		//	int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * gInkOptions.ToolbarSize);
+
+			int gpheight = (int)(this.Height * gInkOptions.ToolbarSize);
 			gpButtonsImage = new Bitmap(2400, gpheight);
 			gpPenWidthImage = new Bitmap(200, gpheight);
 			TransparentBrush = new SolidBrush(Color.Transparent);

@@ -174,6 +174,7 @@ namespace gInk
             tabControl1.TabPages[0].Text = Language.OptionsTabGeneral;
             tabControl1.TabPages[1].Text = Language.OptionsTabPens;
             tabControl1.TabPages[2].Text = Language.OptionsTabHotkeys;
+            tabControl1.TabPages[3].Text = Language.Record;
             this.lbLanguage.Text = Language.OptionsGeneralLanguage;
             this.lbCanvascursor.Text = Language.OptionsGeneralCanvascursor;
             this.lbSnapshotsavepath.Text = Language.OptionsGeneralSnapshotsavepath;
@@ -223,6 +224,27 @@ namespace gInk
 
             if (comboLanguage.Items.Contains(gInkOptions.Language))
                 comboLanguage.SelectedIndex = comboLanguage.Items.IndexOf(gInkOptions.Language);
+
+
+            LngAdd.Text = Language.LngAdd;
+            btnDownload.Text = Language.btnDownload;
+            btnRefreshSources.Text = Language.btnRefreshSources;
+            gbFFmpegExe.Text = Language.gbFFmpegExe;
+            gbSource.Text = Language.gbSource;
+            btnRefreshSources.Text = Language.btnRefreshSources;
+            lblVideoSource.Text = Language.lblVideoSource;
+            lblAudioSource.Text = Language.lblAudioSource;
+            gbCodecs.Text = Language.gbCodecs;
+            lblCodec.Text = Language.lblCodec;
+            lblAudioCodec.Text = Language.lblAudioCodec;
+            gbCommandLineArgs.Text = Language.gbCommandLineArgs;
+            WaterMark.Text = Language.WaterMark;
+            watermark_use.Text = Language.watermark_use;
+            setlLocwater.Text = Language.setlLocwater;
+            waterpadd.Text = Language.waterpadd;
+            setopacity.Text = Language.setopacity;
+            btnTest.Text = Language.btnTest;
+
         }
 
         private void comboPensAlpha_TextChanged(object sender, EventArgs e)
@@ -622,9 +644,9 @@ namespace gInk
         private void watermark_use_CheckedChanged(object sender, EventArgs e)
         {
             watermark_show.Enabled = watermark_use.Checked;
-            groupBox1.Enabled = watermark_use.Checked;
-            groupBox2.Enabled = watermark_use.Checked;
-            groupBox3.Enabled = watermark_use.Checked;
+            setlLocwater.Enabled = watermark_use.Checked;
+            waterpadd.Enabled = watermark_use.Checked;
+            setopacity.Enabled = watermark_use.Checked;
             Options.WaterMarkUse = watermark_use.Checked;
             UpdateUI();
         }
@@ -948,8 +970,11 @@ namespace gInk
         {
             if (comboLanguage.Text != gInkOptions.Language)
             {
+                Language.Dispose();
+
                 gInkOptions.Language = comboLanguage.Text;
-                Root.ChangeLanguage(comboLanguage.Text);
+                Language = new Language(gInkOptions.Language);
+                Root.ChangeLanguage(gInkOptions.Language);
                 FormOptions_LocalReload();
             }
         }

@@ -93,9 +93,13 @@ namespace gInk
         public int GlobalPenWidth = 80;
         public bool gpPenWidthVisible = false;
         public string SnapshotFileFullPath = ""; // used to record the last snapshot file name, to select it when the balloon is clicked
-
+        System.Windows.Forms.Timer RecTim = new System.Windows.Forms.Timer();
         public Root()
         {
+            RecTim.Interval = 1000;
+            RecTim.Tick += (o,e)=>{
+                RecordTick(o, e);
+            };
             ///Load setting using files in folder
             string Settigs = Directory.GetCurrentDirectory() + "\\Settings";
             if (!Directory.Exists(Settigs))
@@ -155,6 +159,8 @@ namespace gInk
             string fullpath = (isRecord && recordPath.Length > 4) ? recordPath : Path.GetFullPath(SnapshotFileFullPath);
             System.Diagnostics.Process.Start("explorer.exe", string.Format("/select,\"{0}\"", fullpath));
             isRecord = false;
+            if(FormCollection!=null)
+            SelectPen(-2);//!Select Cursor
         }
 
         private void TrayIcon_Click(object sender, MouseEventArgs e)
@@ -208,6 +214,9 @@ namespace gInk
         }
         public void StopInk()
         {
+            //stop recording
+            if (rec.IsProcessRunning)
+                OnRecord(null, null);
             FormCollection.Close();
             FormDisplay.Close();
             FormButtonHitter.Close();
@@ -421,17 +430,19 @@ namespace gInk
         }
         FFmpeg rec = new FFmpeg();
         public EventHandler RecordTick;
+       
         public async void OnRecord(object sender, EventArgs e)
         {
-            System.Windows.Forms.Timer b = new System.Windows.Forms.Timer();
-            b.Interval = 250;
-
-            b.Tick += RecordTick;
-
+            
             if (rec.IsProcessRunning)
             {
                 rec.Stop_Record();
-                b.Stop();
+                RecTim.Stop();
+                if (FormCollection != null)
+                {
+                    FormCollection.btPen[6].BackColor = Color.White;
+                    UponButtonsUpdate |= 0x2;
+                }
                 rec.Saved += (o, a) =>
                 {
                     recordPath = o.ToString();
@@ -445,7 +456,7 @@ namespace gInk
             }
             else
             {
-                b.Start();
+                RecTim.Start();
                 trayMenu.MenuItems[0].Text = Language.RecordStop;
                 await Task.Run(() =>
                 {

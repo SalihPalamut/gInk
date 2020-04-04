@@ -288,7 +288,7 @@
             this.gpPenWidth.Controls.Add(this.pboxPenWidthIndicator);
             this.gpPenWidth.Location = new System.Drawing.Point(457, 182);
             this.gpPenWidth.Name = "gpPenWidth";
-            this.gpPenWidth.Size = new System.Drawing.Size(262, 51);
+            this.gpPenWidth.Size = new System.Drawing.Size(148, 45);
             this.gpPenWidth.TabIndex = 4;
             this.gpPenWidth.Paint += new System.Windows.Forms.PaintEventHandler(this.gpPenWidth_Paint);
             this.gpPenWidth.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gpPenWidth_MouseDown);

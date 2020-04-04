@@ -56,6 +56,8 @@
             this.comboCanvasCursor = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.LngCode = new System.Windows.Forms.TextBox();
+            this.LngAdd = new System.Windows.Forms.Button();
             this.toolbar_size = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.lbLanguage = new System.Windows.Forms.Label();
@@ -81,17 +83,17 @@
             this.txtCommandLinePreview = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.WaterMark = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.setopacity = new System.Windows.Forms.GroupBox();
             this.watermark_opacity_text = new System.Windows.Forms.Label();
             this.watermark_opacity = new System.Windows.Forms.TrackBar();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.waterpadd = new System.Windows.Forms.GroupBox();
             this.watermark_Y = new System.Windows.Forms.NumericUpDown();
             this.watermark_X = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.setlLocwater = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.watermark_location_right = new System.Windows.Forms.RadioButton();
@@ -165,8 +167,6 @@
             this.gbFFmpegExe = new System.Windows.Forms.GroupBox();
             this.btnDownload = new System.Windows.Forms.Button();
             this.ffmpeg_path = new System.Windows.Forms.Label();
-            this.LngAdd = new System.Windows.Forms.Button();
-            this.LngCode = new System.Windows.Forms.TextBox();
             this.hiInkVisible = new gInk.HotkeyInputBox();
             this.hiSnapshot = new gInk.HotkeyInputBox();
             this.hiClear = new gInk.HotkeyInputBox();
@@ -184,12 +184,12 @@
             this.Record.SuspendLayout();
             this.gbCommandLinePreview.SuspendLayout();
             this.WaterMark.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.setopacity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_opacity)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.waterpadd.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_X)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.setlLocwater.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -410,6 +410,28 @@
             this.tabPage1.Size = new System.Drawing.Size(859, 611);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
+            // 
+            // LngCode
+            // 
+            this.LngCode.Location = new System.Drawing.Point(498, 156);
+            this.LngCode.Margin = new System.Windows.Forms.Padding(4);
+            this.LngCode.MaxLength = 3;
+            this.LngCode.Name = "LngCode";
+            this.LngCode.Size = new System.Drawing.Size(51, 22);
+            this.LngCode.TabIndex = 12;
+            this.LngCode.Text = "en";
+            this.LngCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LngAdd
+            // 
+            this.LngAdd.Location = new System.Drawing.Point(557, 152);
+            this.LngAdd.Margin = new System.Windows.Forms.Padding(4);
+            this.LngAdd.Name = "LngAdd";
+            this.LngAdd.Size = new System.Drawing.Size(64, 28);
+            this.LngAdd.TabIndex = 11;
+            this.LngAdd.Text = "Add";
+            this.LngAdd.UseVisualStyleBackColor = true;
+            this.LngAdd.Click += new System.EventHandler(this.LngAdd_Click);
             // 
             // toolbar_size
             // 
@@ -713,9 +735,9 @@
             // 
             // WaterMark
             // 
-            this.WaterMark.Controls.Add(this.groupBox3);
-            this.WaterMark.Controls.Add(this.groupBox2);
-            this.WaterMark.Controls.Add(this.groupBox1);
+            this.WaterMark.Controls.Add(this.setopacity);
+            this.WaterMark.Controls.Add(this.waterpadd);
+            this.WaterMark.Controls.Add(this.setlLocwater);
             this.WaterMark.Controls.Add(this.panel3);
             this.WaterMark.Dock = System.Windows.Forms.DockStyle.Top;
             this.WaterMark.Location = new System.Drawing.Point(3, 358);
@@ -725,18 +747,18 @@
             this.WaterMark.TabStop = false;
             this.WaterMark.Text = "Add Watermark";
             // 
-            // groupBox3
+            // setopacity
             // 
-            this.groupBox3.Controls.Add(this.watermark_opacity_text);
-            this.groupBox3.Controls.Add(this.watermark_opacity);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox3.Enabled = false;
-            this.groupBox3.Location = new System.Drawing.Point(387, 18);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 116);
-            this.groupBox3.TabIndex = 8;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Set Opacity";
+            this.setopacity.Controls.Add(this.watermark_opacity_text);
+            this.setopacity.Controls.Add(this.watermark_opacity);
+            this.setopacity.Dock = System.Windows.Forms.DockStyle.Left;
+            this.setopacity.Enabled = false;
+            this.setopacity.Location = new System.Drawing.Point(387, 18);
+            this.setopacity.Name = "setopacity";
+            this.setopacity.Size = new System.Drawing.Size(200, 116);
+            this.setopacity.TabIndex = 8;
+            this.setopacity.TabStop = false;
+            this.setopacity.Text = "Set Opacity";
             // 
             // watermark_opacity_text
             // 
@@ -760,22 +782,22 @@
             this.watermark_opacity.Value = 50;
             this.watermark_opacity.ValueChanged += new System.EventHandler(this.watermark_location_CheckedChanged);
             // 
-            // groupBox2
+            // waterpadd
             // 
-            this.groupBox2.Controls.Add(this.watermark_Y);
-            this.groupBox2.Controls.Add(this.watermark_X);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox2.Enabled = false;
-            this.groupBox2.Location = new System.Drawing.Point(268, 18);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(119, 116);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Padding";
+            this.waterpadd.Controls.Add(this.watermark_Y);
+            this.waterpadd.Controls.Add(this.watermark_X);
+            this.waterpadd.Controls.Add(this.label4);
+            this.waterpadd.Controls.Add(this.label3);
+            this.waterpadd.Controls.Add(this.label2);
+            this.waterpadd.Controls.Add(this.label1);
+            this.waterpadd.Dock = System.Windows.Forms.DockStyle.Left;
+            this.waterpadd.Enabled = false;
+            this.waterpadd.Location = new System.Drawing.Point(268, 18);
+            this.waterpadd.Name = "waterpadd";
+            this.waterpadd.Size = new System.Drawing.Size(119, 116);
+            this.waterpadd.TabIndex = 5;
+            this.waterpadd.TabStop = false;
+            this.waterpadd.Text = "Padding";
             // 
             // watermark_Y
             // 
@@ -833,17 +855,17 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "X:";
             // 
-            // groupBox1
+            // setlLocwater
             // 
-            this.groupBox1.Controls.Add(this.panel1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(134, 18);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(134, 116);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Set Location";
+            this.setlLocwater.Controls.Add(this.panel1);
+            this.setlLocwater.Dock = System.Windows.Forms.DockStyle.Left;
+            this.setlLocwater.Enabled = false;
+            this.setlLocwater.Location = new System.Drawing.Point(134, 18);
+            this.setlLocwater.Name = "setlLocwater";
+            this.setlLocwater.Size = new System.Drawing.Size(134, 116);
+            this.setlLocwater.TabIndex = 4;
+            this.setlLocwater.TabStop = false;
+            this.setlLocwater.Text = "Set Location";
             // 
             // panel1
             // 
@@ -1102,7 +1124,7 @@
             this.tbAACBitrate.Maximum = 16;
             this.tbAACBitrate.Minimum = 1;
             this.tbAACBitrate.Name = "tbAACBitrate";
-            this.tbAACBitrate.Size = new System.Drawing.Size(263, 56);
+            this.tbAACBitrate.Size = new System.Drawing.Size(263, 81);
             this.tbAACBitrate.TabIndex = 1;
             this.tbAACBitrate.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.tbAACBitrate.Value = 4;
@@ -1828,28 +1850,6 @@
             this.ffmpeg_path.TabIndex = 3;
             this.ffmpeg_path.Text = "label1";
             // 
-            // LngAdd
-            // 
-            this.LngAdd.Location = new System.Drawing.Point(557, 152);
-            this.LngAdd.Margin = new System.Windows.Forms.Padding(4);
-            this.LngAdd.Name = "LngAdd";
-            this.LngAdd.Size = new System.Drawing.Size(64, 28);
-            this.LngAdd.TabIndex = 11;
-            this.LngAdd.Text = "Add";
-            this.LngAdd.UseVisualStyleBackColor = true;
-            this.LngAdd.Click += new System.EventHandler(this.LngAdd_Click);
-            // 
-            // LngCode
-            // 
-            this.LngCode.Location = new System.Drawing.Point(498, 156);
-            this.LngCode.Margin = new System.Windows.Forms.Padding(4);
-            this.LngCode.MaxLength = 3;
-            this.LngCode.Name = "LngCode";
-            this.LngCode.Size = new System.Drawing.Size(51, 22);
-            this.LngCode.TabIndex = 12;
-            this.LngCode.Text = "en";
-            this.LngCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // hiInkVisible
             // 
             this.hiInkVisible.BackColor = System.Drawing.Color.White;
@@ -2012,14 +2012,14 @@
             this.gbCommandLinePreview.ResumeLayout(false);
             this.gbCommandLinePreview.PerformLayout();
             this.WaterMark.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.setopacity.ResumeLayout(false);
+            this.setopacity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_opacity)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.waterpadd.ResumeLayout(false);
+            this.waterpadd.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.watermark_X)).EndInit();
-            this.groupBox1.ResumeLayout(false);
+            this.setlLocwater.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -2187,17 +2187,17 @@
         private System.Windows.Forms.TextBox txtCommandLinePreview;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.GroupBox WaterMark;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox setopacity;
         private System.Windows.Forms.Label watermark_opacity_text;
         private System.Windows.Forms.TrackBar watermark_opacity;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox waterpadd;
         private System.Windows.Forms.NumericUpDown watermark_Y;
         private System.Windows.Forms.NumericUpDown watermark_X;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox setlLocwater;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RadioButton watermark_location_right;
