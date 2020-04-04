@@ -48,20 +48,14 @@ namespace gInk
 
     public class Root
     {
-        public Local Local = new Local();
-        //   public const int MaxPenCount = 10;
-
-        // options
-        //public bool[] PenEnabled = new bool[MaxPenCount];
         gInkOptions gInkOptions;
-        //  public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
-
+        public Language Language;
         public int gpButtonsLeft, gpButtonsTop;
 
         // advanced options
         public string CloseOnSnap = "blankonly";
         public bool AlwaysHideToolbar = false;
-   
+
         public bool AutoScroll;
 
         public bool EraserMode = false;
@@ -102,27 +96,34 @@ namespace gInk
 
         public Root()
         {
-            trayMenu = new ContextMenu();
-            trayMenu.MenuItems.Add("Start Record", OnRecord);
-            trayMenu.MenuItems.Add("-");
-            trayMenu.MenuItems.Add(Local.MenuEntryAbout + "...", OnAbout);
-            trayMenu.MenuItems.Add(Local.MenuEntryOptions + "...", OnOptions);
-            trayMenu.MenuItems.Add("-");
-            trayMenu.MenuItems.Add(Local.MenuEntryExit, OnExit);
-
+            ///Load setting using files in folder
             string Settigs = Directory.GetCurrentDirectory() + "\\Settings";
             if (!Directory.Exists(Settigs))
                 Directory.CreateDirectory(Settigs);
+            Settigs = Directory.GetCurrentDirectory() + "\\Languages";
+            if (!Directory.Exists(Settigs))
+                Directory.CreateDirectory(Settigs);
+
             gInkOptions = new gInkOptions();
             if (gInkOptions.PenAttr[0] == null)
                 SetDefaultPens();
             if (gInkOptions.Hotkey_Global == null)
                 SetDefaultConfig();
-            if(gInkOptions.Hotkey_Pens[0] == null)
-            for (int p = 0; p < gInkOptions.MaxPenCount; p++)
-                gInkOptions.Hotkey_Pens[p] = new Hotkey();
-          
+            if (gInkOptions.Hotkey_Pens[0] == null)
+                for (int p = 0; p < gInkOptions.MaxPenCount; p++)
+                    gInkOptions.Hotkey_Pens[p] = new Hotkey();
+
             gInkOptions.Save();
+
+            Language = new Language(gInkOptions.Language);
+
+            trayMenu = new ContextMenu();
+            trayMenu.MenuItems.Add(Language.RecordStart, OnRecord);
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add(Language.MenuEntryAbout + "...", OnAbout);
+            trayMenu.MenuItems.Add(Language.MenuEntryOptions + "...", OnOptions);
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add(Language.MenuEntryExit, OnExit);
 
             Size size = SystemInformation.SmallIconSize;
             trayIcon = new NotifyIcon();
@@ -130,7 +131,7 @@ namespace gInk
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
             trayIcon.MouseClick += TrayIcon_Click;
-            trayIcon.BalloonTipText = Local.NotificationSnapshot;
+            trayIcon.BalloonTipText = Language.NotificationSnapshot;
             trayIcon.BalloonTipClicked += TrayIcon_BalloonTipClicked;
             //trayIcon.BalloonTipClosed += delegate { isRecord = false; } ;
             trayIcon.Icon = global::gInk.Properties.Resources.g_rec1;
@@ -356,12 +357,12 @@ namespace gInk
 
         public void SetDefaultPens()
         {
-            for(int i = 0; i < gInkOptions.MaxPenCount; i++)
+            for (int i = 0; i < gInkOptions.MaxPenCount; i++)
             {
-                gInkOptions.PenEnabled[i] = (i<7);
+                gInkOptions.PenEnabled[i] = (i < 7);
                 gInkOptions.PenAttr[i] = new DrawingAttributes();
             }
-            
+
             gInkOptions.PenAttr[0].Color = Color.FromArgb(255, 0, 0);
             gInkOptions.PenAttr[0].Width = 80;
             gInkOptions.PenAttr[0].Transparency = 0;
@@ -401,7 +402,7 @@ namespace gInk
             gInkOptions.PenAttr[9].Color = Color.FromArgb(145, 70, 160);
             gInkOptions.PenAttr[9].Width = 500;
             gInkOptions.PenAttr[9].Transparency = 175;
-           
+
         }
 
         public void SetDefaultConfig()
@@ -440,12 +441,12 @@ namespace gInk
                         trayIcon.ShowBalloonTip(300);
                     }
                 };
-                trayMenu.MenuItems[0].Text = "Start Record";
+                trayMenu.MenuItems[0].Text = Language.RecordStart;
             }
             else
             {
                 b.Start();
-                trayMenu.MenuItems[0].Text = "Stop Record";
+                trayMenu.MenuItems[0].Text = Language.RecordStop;
                 await Task.Run(() =>
                 {
                     FFmpegOptions opt = new FFmpegOptions();
@@ -464,9 +465,9 @@ namespace gInk
         public void SetHotkey()
         {
             int modifier = 0;
-            if ( gInkOptions.Hotkey_Global.Control) modifier |= 0x2;
-            if ( gInkOptions.Hotkey_Global.Alt) modifier |= 0x1;
-            if ( gInkOptions.Hotkey_Global.Shift) modifier |= 0x4;
+            if (gInkOptions.Hotkey_Global.Control) modifier |= 0x2;
+            if (gInkOptions.Hotkey_Global.Alt) modifier |= 0x1;
+            if (gInkOptions.Hotkey_Global.Shift) modifier |= 0x4;
             if (gInkOptions.Hotkey_Global.Win) modifier |= 0x8;
             if (modifier != 0)
                 RegisterHotKey(IntPtr.Zero, 0, modifier, gInkOptions.Hotkey_Global.Key);
@@ -475,24 +476,26 @@ namespace gInk
         public void UnsetHotkey()
         {
             int modifier = 0;
-            if ( gInkOptions.Hotkey_Global.Control) modifier |= 0x2;
-            if ( gInkOptions.Hotkey_Global.Alt) modifier |= 0x1;
-            if ( gInkOptions.Hotkey_Global.Shift) modifier |= 0x4;
+            if (gInkOptions.Hotkey_Global.Control) modifier |= 0x2;
+            if (gInkOptions.Hotkey_Global.Alt) modifier |= 0x1;
+            if (gInkOptions.Hotkey_Global.Shift) modifier |= 0x4;
             if (gInkOptions.Hotkey_Global.Win) modifier |= 0x8;
             if (modifier != 0)
                 UnregisterHotKey(IntPtr.Zero, 0);
         }
 
-        public void ChangeLanguage(string filename)
+        public void ChangeLanguage(string code)
         {
-            Local.LoadLocalFile(filename);
+            gInkOptions.Language = code;
+            Language = new Language(gInkOptions.Language);
+
             trayMenu.MenuItems.Clear();
-            trayMenu.MenuItems.Add("Start Record", OnRecord);
+            trayMenu.MenuItems.Add(Language.RecordStart, OnRecord);
             trayMenu.MenuItems.Add("-");
-            trayMenu.MenuItems.Add(Local.MenuEntryAbout + "...", OnAbout);
-            trayMenu.MenuItems.Add(Local.MenuEntryOptions + "...", OnOptions);
+            trayMenu.MenuItems.Add(Language.MenuEntryAbout + "...", OnAbout);
+            trayMenu.MenuItems.Add(Language.MenuEntryOptions + "...", OnOptions);
             trayMenu.MenuItems.Add("-");
-            trayMenu.MenuItems.Add(Local.MenuEntryExit, OnExit);
+            trayMenu.MenuItems.Add(Language.MenuEntryExit, OnExit);
         }
 
         private void OnExit(object sender, EventArgs e)

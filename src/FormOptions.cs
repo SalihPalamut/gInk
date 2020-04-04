@@ -32,17 +32,19 @@ namespace gInk
         Label[] lbHotkeyPens = new Label[10];
         HotkeyInputBox[] hiPens = new HotkeyInputBox[10];
         private bool settingsLoaded = false;
-        gInkOptions gInkOptions; 
+        gInkOptions gInkOptions;
+        Language Language;
         public FormOptions(Root root)
         {
             Root = root;
             InitializeComponent();
             gInkOptions = new gInkOptions();
+            Language = new Language(gInkOptions.Language);
         }
 
         private void FormOptions_Load(object sender, EventArgs e)
         {
-           
+
             Root.UnsetHotkey();
             cbEraserEnabled.Checked = gInkOptions.EraserEnabled;
             cbPointerEnabled.Checked = gInkOptions.PointerEnabled;
@@ -54,7 +56,7 @@ namespace gInk
             cbInkVisibleEnabled.Checked = gInkOptions.InkVisibleEnabled;
             cbAllowDragging.Checked = gInkOptions.AllowDraggingToolbar;
             cbAllowHotkeyInPointer.Checked = gInkOptions.AllowHotkeyInPointerMode;
-            toolbar_size.Value = (decimal)((gInkOptions.ToolbarSize - 0.03) / 0.005)+1;
+            toolbar_size.Value = (decimal)((gInkOptions.ToolbarSize - 0.03) / 0.005) + 1;
             comboCanvasCursor.SelectedIndex = gInkOptions.CanvasCursor;
 
             tbSnapPath.Text = gInkOptions.SnapshotBasePath;
@@ -168,58 +170,59 @@ namespace gInk
 
         private void FormOptions_LocalReload()
         {
-            this.Text = Root.Local.MenuEntryOptions + " - gInk";
-            tabControl1.TabPages[0].Text = Root.Local.OptionsTabGeneral;
-            tabControl1.TabPages[1].Text = Root.Local.OptionsTabPens;
-            tabControl1.TabPages[2].Text = Root.Local.OptionsTabHotkeys;
-            this.lbLanguage.Text = Root.Local.OptionsGeneralLanguage;
-            this.lbCanvascursor.Text = Root.Local.OptionsGeneralCanvascursor;
-            this.lbSnapshotsavepath.Text = Root.Local.OptionsGeneralSnapshotsavepath;
-            this.cbWhiteIcon.Text = Root.Local.OptionsGeneralWhitetrayicon;
-            this.cbAllowDragging.Text = Root.Local.OptionsGeneralAllowdragging;
+            this.Text = Language.MenuEntryOptions + " - gInk";
+            tabControl1.TabPages[0].Text = Language.OptionsTabGeneral;
+            tabControl1.TabPages[1].Text = Language.OptionsTabPens;
+            tabControl1.TabPages[2].Text = Language.OptionsTabHotkeys;
+            this.lbLanguage.Text = Language.OptionsGeneralLanguage;
+            this.lbCanvascursor.Text = Language.OptionsGeneralCanvascursor;
+            this.lbSnapshotsavepath.Text = Language.OptionsGeneralSnapshotsavepath;
+            this.cbWhiteIcon.Text = Language.OptionsGeneralWhitetrayicon;
+            this.cbAllowDragging.Text = Language.OptionsGeneralAllowdragging;
 
 
-            this.lbHkClear.Text = Root.Local.ButtonNameClear;
-            this.lbHkEraser.Text = Root.Local.ButtonNameErasor;
-            this.lbHkInkVisible.Text = Root.Local.ButtonNameInkVisible;
-            this.lbHkPan.Text = Root.Local.ButtonNamePan;
-            this.lbHkPointer.Text = Root.Local.ButtonNameMousePointer;
-            this.lbHkRedo.Text = Root.Local.ButtonNameRedo;
-            this.lbHkSnapshot.Text = Root.Local.ButtonNameSnapshot;
-            this.lbHkUndo.Text = Root.Local.ButtonNameUndo;
-            this.lbGlobalHotkey.Text = Root.Local.OptionsHotkeysglobal;
-            this.cbAllowHotkeyInPointer.Text = Root.Local.OptionsHotkeysEnableinpointer;
+            this.lbHkClear.Text = Language.ButtonNameClear;
+            this.lbHkEraser.Text = Language.ButtonNameErasor;
+            this.lbHkInkVisible.Text = Language.ButtonNameInkVisible;
+            this.lbHkPan.Text = Language.ButtonNamePan;
+            this.lbHkPointer.Text = Language.ButtonNameMousePointer;
+            this.lbHkRedo.Text = Language.ButtonNameRedo;
+            this.lbHkSnapshot.Text = Language.ButtonNameSnapshot;
+            this.lbHkUndo.Text = Language.ButtonNameUndo;
+            this.lbGlobalHotkey.Text = Language.OptionsHotkeysglobal;
+            this.cbAllowHotkeyInPointer.Text = Language.OptionsHotkeysEnableinpointer;
 
-            this.comboCanvasCursor.Items[0] = Root.Local.OptionsGeneralCanvascursorArrow;
-            this.comboCanvasCursor.Items[1] = Root.Local.OptionsGeneralCanvascursorPentip;
+            this.comboCanvasCursor.Items[0] = Language.OptionsGeneralCanvascursorArrow;
+            this.comboCanvasCursor.Items[1] = Language.OptionsGeneralCanvascursorPentip;
 
 
             for (int p = 0; p < gInkOptions.MaxPenCount; p++)
             {
                 comboPensAlpha[p].Items.Clear();
                 comboPensWidth[p].Items.Clear();
-                comboPensAlpha[p].Items.AddRange(new object[] { Root.Local.OptionsPensPencil, Root.Local.OptionsPensHighlighter });
-                comboPensWidth[p].Items.AddRange(new object[] { Root.Local.OptionsPensThin, Root.Local.OptionsPensNormal, Root.Local.OptionsPensThick });
+                comboPensAlpha[p].Items.AddRange(new object[] { Language.OptionsPensPencil, Language.OptionsPensHighlighter });
+                comboPensWidth[p].Items.AddRange(new object[] { Language.OptionsPensThin, Language.OptionsPensNormal, Language.OptionsPensThick });
 
-                lbPens[p].Text = Root.Local.ButtonNamePen[p];
-                lbHotkeyPens[p].Text = Root.Local.ButtonNamePen[p];
+                lbPens[p].Text = Language.ButtonNamePen[p];
+                lbHotkeyPens[p].Text = Language.ButtonNamePen[p];
 
-                lbcbPens.Text = Root.Local.OptionsPensShow;
-                lbpboxPens.Text = Root.Local.OptionsPensColor;
-                lbcomboPensAlpha.Text = Root.Local.OptionsPensAlpha;
-                lbcomboPensWidth.Text = Root.Local.OptionsPensWidth;
+                lbcbPens.Text = Language.OptionsPensShow;
+                lbpboxPens.Text = Language.OptionsPensColor;
+                lbcomboPensAlpha.Text = Language.OptionsPensAlpha;
+                lbcomboPensWidth.Text = Language.OptionsPensWidth;
             }
 
             comboLanguage.Items.Clear();
-            List<string> langs = Root.Local.GetLanguagenames();
+            comboLanguage.Items.Add("en");
+
+            List<string> langs = Language.GetLanguages();
             foreach (string languagename in langs)
             {
                 comboLanguage.Items.Add(languagename);
             }
 
-            string ln = Root.Local.GetLanguagenameByFilename(Root.Local.CurrentLanguageFile);
-            if (comboLanguage.Items.Contains(ln))
-                comboLanguage.SelectedIndex = comboLanguage.Items.IndexOf(ln);
+            if (comboLanguage.Items.Contains(gInkOptions.Language))
+                comboLanguage.SelectedIndex = comboLanguage.Items.IndexOf(gInkOptions.Language);
         }
 
         private void comboPensAlpha_TextChanged(object sender, EventArgs e)
@@ -267,7 +270,7 @@ namespace gInk
                     if (colorDialog1.ShowDialog() == DialogResult.OK)
                     {
                         gInkOptions.PenAttr[p].Color = colorDialog1.Color;
-                       // Root.PenAttr[p].Color = colorDialog1.Color;
+                        // Root.PenAttr[p].Color = colorDialog1.Color;
                         pboxPens[p].BackColor = colorDialog1.Color;
                     }
                 }
@@ -282,7 +285,7 @@ namespace gInk
 
         private void FormOptions_FormClosing(object sender, FormClosingEventArgs e)
         {
-           gInkOptions.Save();
+            gInkOptions.Save();
             if (settingsLoaded)
                 Options.save();
 
@@ -354,24 +357,24 @@ namespace gInk
         {
             for (int p = 0; p < gInkOptions.MaxPenCount; p++)
             {
-                if (comboPensWidth[p].Text == Root.Local.OptionsPensThin)
+                if (comboPensWidth[p].Text == Language.OptionsPensThin)
                 {
                     comboPensWidth[p].Text = "30";
                 }
-                else if (comboPensWidth[p].Text == Root.Local.OptionsPensNormal)
+                else if (comboPensWidth[p].Text == Language.OptionsPensNormal)
                 {
                     comboPensWidth[p].Text = "80";
                 }
-                else if (comboPensWidth[p].Text == Root.Local.OptionsPensThick)
+                else if (comboPensWidth[p].Text == Language.OptionsPensThick)
                 {
                     comboPensWidth[p].Text = "500";
                 }
 
-                if (comboPensAlpha[p].Text == Root.Local.OptionsPensPencil)
+                if (comboPensAlpha[p].Text == Language.OptionsPensPencil)
                 {
                     comboPensAlpha[p].Text = "255";
                 }
-                else if (comboPensAlpha[p].Text == Root.Local.OptionsPensHighlighter)
+                else if (comboPensAlpha[p].Text == Language.OptionsPensHighlighter)
                 {
                     comboPensAlpha[p].Text = "80";
                 }
@@ -890,6 +893,12 @@ namespace gInk
             gInkOptions.ToolbarSize = 0.03 + (((int)toolbar_size.Value - 1) * 0.005);
         }
 
+        private void LngAdd_Click(object sender, EventArgs e)
+        {
+            if (LngCode.Text.Length > 0)
+                Language.Create(LngCode.Text);
+        }
+
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
@@ -937,9 +946,10 @@ namespace gInk
 
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboLanguage.Text != Root.Local.GetLanguagenameByFilename(Root.Local.CurrentLanguageFile))
+            if (comboLanguage.Text != gInkOptions.Language)
             {
-                Root.ChangeLanguage(Root.Local.GetFilenameByLanguagename(comboLanguage.Text));
+                gInkOptions.Language = comboLanguage.Text;
+                Root.ChangeLanguage(comboLanguage.Text);
                 FormOptions_LocalReload();
             }
         }

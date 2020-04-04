@@ -16,6 +16,7 @@ namespace gInk
         public Root Root;
         public InkOverlay IC;
         gInkOptions gInkOptions;
+        Language Language;
         public Button[] btPen;
         public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
         public Bitmap image_dock, image_dockback;
@@ -53,6 +54,7 @@ namespace gInk
             Root = root;
             InitializeComponent();
             gInkOptions = new gInkOptions();
+            Language = new Language(gInkOptions.Language);
             root.RecordTick += Record_Tick;
             PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
             PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;
@@ -122,7 +124,7 @@ namespace gInk
                 btPen[b].FlatAppearance.MouseOverBackColor = gInkOptions.PenAttr[b].Color;
                 if (b == 3) btPen[b].Name = "Select";
                 if (b == 6) btPen[b].Name = "Record";
-                this.toolTip.SetToolTip(this.btPen[b], Root.Local.ButtonNamePen[b]);
+                this.toolTip.SetToolTip(this.btPen[b], Language.ButtonNamePen[b]);
 
                 btPen[b].MouseDown += gpButtons_MouseDown;
                 btPen[b].MouseMove += gpButtons_MouseMove;
@@ -447,16 +449,16 @@ namespace gInk
             ToTransparent();
             ToTopMost();
 
-            this.toolTip.SetToolTip(this.btDock, Root.Local.ButtonNameDock);
-            this.toolTip.SetToolTip(this.btPenWidth, Root.Local.ButtonNamePenwidth);
-            this.toolTip.SetToolTip(this.btEraser, Root.Local.ButtonNameErasor);
-            this.toolTip.SetToolTip(this.btPan, Root.Local.ButtonNamePan);
-            this.toolTip.SetToolTip(this.btPointer, Root.Local.ButtonNameMousePointer);
-            this.toolTip.SetToolTip(this.btInkVisible, Root.Local.ButtonNameInkVisible);
-            this.toolTip.SetToolTip(this.btSnap, Root.Local.ButtonNameSnapshot);
-            this.toolTip.SetToolTip(this.btUndo, Root.Local.ButtonNameUndo);
-            this.toolTip.SetToolTip(this.btClear, Root.Local.ButtonNameClear);
-            this.toolTip.SetToolTip(this.btStop, Root.Local.ButtonNameExit);
+            this.toolTip.SetToolTip(this.btDock, Language.ButtonNameDock);
+            this.toolTip.SetToolTip(this.btPenWidth, Language.ButtonNamePenwidth);
+            this.toolTip.SetToolTip(this.btEraser, Language.ButtonNameErasor);
+            this.toolTip.SetToolTip(this.btPan, Language.ButtonNamePan);
+            this.toolTip.SetToolTip(this.btPointer, Language.ButtonNameMousePointer);
+            this.toolTip.SetToolTip(this.btInkVisible, Language.ButtonNameInkVisible);
+            this.toolTip.SetToolTip(this.btSnap, Language.ButtonNameSnapshot);
+            this.toolTip.SetToolTip(this.btUndo, Language.ButtonNameUndo);
+            this.toolTip.SetToolTip(this.btClear, Language.ButtonNameClear);
+            this.toolTip.SetToolTip(this.btStop, Language.ButtonNameExit);
         }
 
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)

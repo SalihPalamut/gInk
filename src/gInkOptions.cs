@@ -108,6 +108,6 @@ namespace gInk
         public Hotkey Hotkey_Redo { get; set; } = new Hotkey();
         public Hotkey Hotkey_Snap { get; set; } = new Hotkey();
         public Hotkey Hotkey_Clear { get; set; } = new Hotkey();
-
+        public string Language { get; set; } = "en";
     }
 }
