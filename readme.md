@@ -24,6 +24,8 @@ Inks rendered on dynamic desktops.
 Stylus w/ eraser, touch screen and mouse compatible.  
 Click-through mode.  
 Multiple displays support.  
+Pen size support.
+Pen Colorful support.
 Pen pressure support.  
 Snapshot support.  
 Hotkey support.    
