@@ -178,7 +178,7 @@ namespace gInk
             this.lbLanguage.Text = Language.OptionsGeneralLanguage;
             this.lbCanvascursor.Text = Language.OptionsGeneralCanvascursor;
             this.lbSnapshotsavepath.Text = Language.OptionsGeneralSnapshotsavepath;
-            this.cbWhiteIcon.Text = Language.OptionsGeneralWhitetrayicon;
+        
             this.cbAllowDragging.Text = Language.OptionsGeneralAllowdragging;
 
 
@@ -720,10 +720,13 @@ namespace gInk
             {
                 cboVideoSource.Items.AddRange(devs.VideoDevices.ToArray());
                 cboAudioSource.Items.AddRange(devs.AudioDevices.ToArray());
-
             }
-
             btnRefreshSources.Enabled = true;
+            if (settingsLoaded)
+            {
+                cboVideoSource.SelectedIndex = 1;
+                cboAudioSource.SelectedIndex = 0;
+            }
         }
 
         private void cboVideoCodec_SelectedIndexChanged(object sender, EventArgs e)
@@ -919,6 +922,15 @@ namespace gInk
         {
             if (LngCode.Text.Length > 0)
                 Language.Create(LngCode.Text);
+        }
+
+        private void advance_CheckedChanged(object sender, EventArgs e)
+        {
+            gbCodecs.Visible = advance.Checked;
+            gbCommandLineArgs.Visible= advance.Checked;
+            txtCommandLinePreview.Visible= advance.Checked;
+            cboVideoSource.Visible= advance.Checked; 
+            lblVideoSource.Visible= advance.Checked; 
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

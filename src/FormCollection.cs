@@ -1152,9 +1152,9 @@ namespace gInk
                     if (pressed && !LastPenStatus[p] && gInkOptions.Hotkey_Pens[p].ModifierMatch(control, alt, shift, win))
                     {
                         if (btPen[p].Name == "Select" || btPen[p].Name == "Record")
-                            btColor_Click(btPen[p], null);
+                            btPen[p].PerformClick();
                         else
-                        SelectPen(p);
+                            SelectPen(p);
                     }
                     LastPenStatus[p] = pressed;
                 }
@@ -1465,10 +1465,8 @@ namespace gInk
                         ((Button)sender).BackColor = PenColor.Color;
                         gInkOptions.PenAttr[3].Color = PenColor.Color;
                         PenColor.Close();
-                    }
-                    
-
-                            SelectPen(b);
+                    }          
+                    SelectPen(b);
                 }
         }
 

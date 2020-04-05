@@ -45,7 +45,6 @@
             this.cbUndoEnabled = new System.Windows.Forms.CheckBox();
             this.cbClearEnabled = new System.Windows.Forms.CheckBox();
             this.cbWidthEnabled = new System.Windows.Forms.CheckBox();
-            this.cbWhiteIcon = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.tbSnapPath = new System.Windows.Forms.TextBox();
             this.lbSnapshotsavepath = new System.Windows.Forms.Label();
@@ -165,6 +164,7 @@
             this.lblVideoSource = new System.Windows.Forms.Label();
             this.btnRefreshSources = new System.Windows.Forms.Button();
             this.gbFFmpegExe = new System.Windows.Forms.GroupBox();
+            this.advance = new System.Windows.Forms.CheckBox();
             this.btnDownload = new System.Windows.Forms.Button();
             this.ffmpeg_path = new System.Windows.Forms.Label();
             this.hiInkVisible = new gInk.HotkeyInputBox();
@@ -292,17 +292,6 @@
             this.cbWidthEnabled.UseVisualStyleBackColor = true;
             this.cbWidthEnabled.CheckedChanged += new System.EventHandler(this.cbWidthEnabled_CheckedChanged);
             // 
-            // cbWhiteIcon
-            // 
-            this.cbWhiteIcon.AutoSize = true;
-            this.cbWhiteIcon.Location = new System.Drawing.Point(15, 293);
-            this.cbWhiteIcon.Margin = new System.Windows.Forms.Padding(4);
-            this.cbWhiteIcon.Name = "cbWhiteIcon";
-            this.cbWhiteIcon.Size = new System.Drawing.Size(149, 21);
-            this.cbWhiteIcon.TabIndex = 0;
-            this.cbWhiteIcon.Text = "Use white tray icon";
-            this.cbWhiteIcon.UseVisualStyleBackColor = true;
-            // 
             // tbSnapPath
             // 
             this.tbSnapPath.Location = new System.Drawing.Point(236, 249);
@@ -402,7 +391,6 @@
             this.tabPage1.Controls.Add(this.cbClearEnabled);
             this.tabPage1.Controls.Add(this.lbSnapshotsavepath);
             this.tabPage1.Controls.Add(this.cbAllowDragging);
-            this.tabPage1.Controls.Add(this.cbWhiteIcon);
             this.tabPage1.Controls.Add(this.tbSnapPath);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
@@ -526,9 +514,9 @@
             this.cbAllowDragging.Location = new System.Drawing.Point(15, 330);
             this.cbAllowDragging.Margin = new System.Windows.Forms.Padding(4);
             this.cbAllowDragging.Name = "cbAllowDragging";
-            this.cbAllowDragging.Size = new System.Drawing.Size(264, 21);
+            this.cbAllowDragging.Size = new System.Drawing.Size(170, 21);
             this.cbAllowDragging.TabIndex = 0;
-            this.cbAllowDragging.Text = "Allow dragging toolbar (experimental)";
+            this.cbAllowDragging.Text = "Allow dragging toolbar";
             this.cbAllowDragging.UseVisualStyleBackColor = true;
             this.cbAllowDragging.CheckedChanged += new System.EventHandler(this.cbAllowDragging_CheckedChanged);
             // 
@@ -719,6 +707,7 @@
             this.txtCommandLinePreview.Size = new System.Drawing.Size(671, 84);
             this.txtCommandLinePreview.TabIndex = 0;
             this.txtCommandLinePreview.Text = resources.GetString("txtCommandLinePreview.Text");
+            this.txtCommandLinePreview.Visible = false;
             // 
             // btnTest
             // 
@@ -998,6 +987,7 @@
             this.gbCommandLineArgs.TabIndex = 6;
             this.gbCommandLineArgs.TabStop = false;
             this.gbCommandLineArgs.Text = "Additional command line arguments";
+            this.gbCommandLineArgs.Visible = false;
             // 
             // tbUserArgs
             // 
@@ -1030,6 +1020,7 @@
             this.gbCodecs.TabIndex = 3;
             this.gbCodecs.TabStop = false;
             this.gbCodecs.Text = "Codecs";
+            this.gbCodecs.Visible = false;
             // 
             // pbAudioCodecWarning
             // 
@@ -1786,6 +1777,7 @@
             this.cboVideoSource.Name = "cboVideoSource";
             this.cboVideoSource.Size = new System.Drawing.Size(224, 24);
             this.cboVideoSource.TabIndex = 2;
+            this.cboVideoSource.Visible = false;
             this.cboVideoSource.SelectedIndexChanged += new System.EventHandler(this.cboVideoSource_SelectedIndexChanged);
             // 
             // lblVideoSource
@@ -1799,6 +1791,7 @@
             this.lblVideoSource.Size = new System.Drawing.Size(95, 17);
             this.lblVideoSource.TabIndex = 1;
             this.lblVideoSource.Text = "Video source:";
+            this.lblVideoSource.Visible = false;
             // 
             // btnRefreshSources
             // 
@@ -1815,6 +1808,7 @@
             // 
             // gbFFmpegExe
             // 
+            this.gbFFmpegExe.Controls.Add(this.advance);
             this.gbFFmpegExe.Controls.Add(this.btnDownload);
             this.gbFFmpegExe.Controls.Add(this.ffmpeg_path);
             this.gbFFmpegExe.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1826,6 +1820,17 @@
             this.gbFFmpegExe.TabIndex = 1;
             this.gbFFmpegExe.TabStop = false;
             this.gbFFmpegExe.Text = "FFmpeg path";
+            // 
+            // advance
+            // 
+            this.advance.AutoSize = true;
+            this.advance.Location = new System.Drawing.Point(425, 22);
+            this.advance.Name = "advance";
+            this.advance.Size = new System.Drawing.Size(140, 21);
+            this.advance.TabIndex = 4;
+            this.advance.Text = "Advance Settings";
+            this.advance.UseVisualStyleBackColor = true;
+            this.advance.CheckedChanged += new System.EventHandler(this.advance_CheckedChanged);
             // 
             // btnDownload
             // 
@@ -2082,7 +2087,6 @@
 		private System.Windows.Forms.CheckBox cbUndoEnabled;
 		private System.Windows.Forms.CheckBox cbClearEnabled;
 		private System.Windows.Forms.CheckBox cbWidthEnabled;
-		private System.Windows.Forms.CheckBox cbWhiteIcon;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
 		private System.Windows.Forms.TextBox tbSnapPath;
 		private System.Windows.Forms.Label lbSnapshotsavepath;
@@ -2213,5 +2217,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox LngCode;
         private System.Windows.Forms.Button LngAdd;
+        private System.Windows.Forms.CheckBox advance;
     }
 }

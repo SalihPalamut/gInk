@@ -90,7 +90,7 @@ namespace gInk
 
         public bool[] PenEnabled { get; set; } = new bool[MaxPenCount];
 
-        public string SnapshotBasePath { get; set; } = "%USERPROFILE%/Pictures/gInk/";
+        public string SnapshotBasePath { get; set; } = @"%USERPROFILE%\Pictures\gInk\";
 
         public int CanvasCursor { get; set; } = 0;
 

@@ -301,7 +301,6 @@ namespace gInk
 		{
 			string snapbasepath = gInkOptions.SnapshotBasePath;
 			snapbasepath = Environment.ExpandEnvironmentVariables(snapbasepath);
-			if (gInkOptions.SnapshotBasePath == "%USERPROFILE%/Pictures/gInk/")
 				if (!System.IO.Directory.Exists(snapbasepath))
 					System.IO.Directory.CreateDirectory(snapbasepath);
 
@@ -339,9 +338,9 @@ namespace gInk
 				}
 
 				Clipboard.SetImage(tempbmp);
-				DateTime now = DateTime.Now;
-				string nowstr = now.Year.ToString() + "-" + now.Month.ToString("D2") + "-" + now.Day.ToString("D2") + " " + now.Hour.ToString("D2") + "-" + now.Minute.ToString("D2") + "-" + now.Second.ToString("D2");
-				string savefilename = nowstr + ".png";
+			
+			
+				string savefilename = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".png";
 				Root.SnapshotFileFullPath = snapbasepath + savefilename;
 
 				tempbmp.Save(Root.SnapshotFileFullPath, System.Drawing.Imaging.ImageFormat.Png);
